@@ -45,7 +45,7 @@ public class GetDailyBTCChartDataExample
 
         PoloniexExchangeService service = new PoloniexExchangeService(tradingAPIKey, tradingAPISecret);
         List<PoloniexChartData> btcDailyChartData = service.returnBTCChartData(ExchangeService.DAILY_TIME_PERIOD, ExchangeService.LONG_LONG_AGO);
-        LogManager.getLogger(GetDailyBTCChartDataExample.class).info(btcDailyChartData);
+        LOG.info(btcDailyChartData);
     }
 
     private Properties loadProperties(String propertiesFileName)
@@ -57,7 +57,7 @@ public class GetDailyBTCChartDataExample
         }
         catch (IOException ex)
         {
-            LogManager.getLogger(GetDailyBTCChartDataExample.class).error("Could not load properties file " + propertiesFileName + " - " + ex.getMessage());
+            LOG.error("Could not load properties file " + propertiesFileName + " - " + ex.getMessage());
         }
 
         return properties;
