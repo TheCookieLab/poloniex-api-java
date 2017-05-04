@@ -1,6 +1,8 @@
 package com.cf.client.poloniex;
 
 import com.cf.ExchangeService;
+import com.cf.PriceDataAPIClient;
+import com.cf.TradingAPIClient;
 import com.cf.data.map.poloniex.PoloniexDataMapper;
 import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexCompleteBalance;
@@ -19,8 +21,8 @@ import org.apache.log4j.LogManager;
  */
 public class PoloniexExchangeService implements ExchangeService
 {
-    private final PoloniexPublicAPIClient publicClient;
-    private final PoloniexTradingAPIClient tradingClient;
+    private final PriceDataAPIClient publicClient;
+    private final TradingAPIClient tradingClient;
     private final PoloniexDataMapper mapper;
 
     public PoloniexExchangeService(String apiKey, String apiSecret)
@@ -30,7 +32,7 @@ public class PoloniexExchangeService implements ExchangeService
         this.mapper = new PoloniexDataMapper();
     }
 
-    public PoloniexExchangeService(PoloniexPublicAPIClient publicClient, PoloniexTradingAPIClient tradingClient, PoloniexDataMapper mapper)
+    public PoloniexExchangeService(PriceDataAPIClient publicClient, TradingAPIClient tradingClient, PoloniexDataMapper mapper)
     {
         this.publicClient = publicClient;
         this.tradingClient = tradingClient;
