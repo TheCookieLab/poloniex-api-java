@@ -156,7 +156,8 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
 
     private String returnTradingAPICommandResults(String commandValue)
     {
-        return returnTradingAPICommandResults(commandValue, new ArrayList<>());
+        ArrayList<NameValuePair> list = new ArrayList<NameValuePair>();
+        return returnTradingAPICommandResults(commandValue, list);
     }
 
 }
