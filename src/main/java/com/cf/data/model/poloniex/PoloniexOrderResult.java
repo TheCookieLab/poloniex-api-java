@@ -12,10 +12,10 @@ public class PoloniexOrderResult
     public final String error;
     public final List<PoloniexTradeHistory> resultingTrades;
 
-    public PoloniexOrderResult(Long orderNumber, String error, List<PoloniexTradeHistory> resultingTrades)
+    public PoloniexOrderResult(Long orderNumber, List<PoloniexTradeHistory> resultingTrades, String error)
     {
         this.orderNumber = orderNumber;
-        this.error = error;
         this.resultingTrades = resultingTrades;
+        this.error = error;
     }
 }
