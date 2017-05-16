@@ -115,6 +115,16 @@ public class PoloniexDataMapperTest
         assertEquals(BigDecimal.valueOf(0.00058625), orderResult.resultingTrades.get(0).total);
         assertEquals("16164", orderResult.resultingTrades.get(0).tradeID);
         assertEquals("buy", orderResult.resultingTrades.get(0).type);
+        assertNull(orderResult.error);
+    }
+    
+    @Test
+    public void mapFailedBuyTradeOrderWithError() {
+        String data = "{\"error\":\"Unable to fill order completely.\"}";
+        PoloniexOrderResult orderResult = mapper.mapTradeOrder(data);
+        assertNull(orderResult.orderNumber);
+        assertNull(orderResult.resultingTrades);
+        assertNotNull(orderResult.error);               
     }
 
     @Test
