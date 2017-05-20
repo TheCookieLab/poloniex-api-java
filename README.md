@@ -20,7 +20,7 @@ The PoloniexExchangeService offers the following functionality:
 String apiKey = "foo";
 String apiSecret = "bar";
 PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
-PoloniexTicker btcTicker = service.getChartData("USDT_BTC");
+PoloniexTicker btcTicker = service.returnTicker("USDT_BTC");
 ```
 
 ### Return chart data  
@@ -29,7 +29,7 @@ String apiKey = "foo";
 String apiSecret = "bar";
 PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
 List<PoloniexChartData> btcDailyChartDataStartingFromYesterday = 
-  service.getChartData("USDT_BTC", 
+  service.returnChartData("USDT_BTC", 
                         86400, 
                         ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toEpochSecond());
 ```
