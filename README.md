@@ -13,7 +13,7 @@ Passing in null (or invalid values) for either the API Key or API Secret will pr
 
 The PoloniexExchangeService offers the following functionality:
 
-## Public API Methods (do not require Poloniex account)  
+## Public API Methods (does not require Poloniex account)  
 
 ### Return ticker  
 ```java
@@ -30,7 +30,7 @@ String apiSecret = "bar";
 PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
 List<PoloniexChartData> btcDailyChartDataStartingFromYesterday = 
   service.returnChartData("USDT_BTC", 
-                        86400, 
+                        86400L, 
                         ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toEpochSecond());
 ```
 

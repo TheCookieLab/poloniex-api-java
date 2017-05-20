@@ -9,21 +9,8 @@
         <Logger name="com.cf" level="debug" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="eu.verdelhan.ta4j" level="info" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
         <Logger name="org.apache" level="info" additivity="false">
             <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="org.reflections" level="warn" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="io.netty" level="warn" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="ws.wamp.jawampa" level="warn" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
         <Root level="error">
             <AppenderRef ref="Console"/>
         </Root>
