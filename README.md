@@ -13,18 +13,30 @@ Passing in null (or invalid values) for either the API Key or API Secret will pr
 
 The PoloniexExchangeService offers the following functionality:
 
-1. Public API Methods (do not require Poloniex account)  
-Return ticker  
-Return chart data  
+## Public API Methods (do not require Poloniex account)  
+
+### Return ticker  
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
 PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
-List<PoloniexChartData> btcDailyChartDataStartingFromYesterday = service.getChartData("USDT_BTC", 86400, ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toEpochSecond());
+PoloniexTicker btcTicker = service.getChartData("USDT_BTC");
 ```
 
-2. Trading API Methods (Requires Poloniex account and API access enabled)  
-Return balance
+### Return chart data  
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+List<PoloniexChartData> btcDailyChartDataStartingFromYesterday = 
+  service.getChartData("USDT_BTC", 
+                        86400, 
+                        ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toEpochSecond());
+```
+
+## Trading API Methods (Requires Poloniex account and API access enabled)  
+
+### Return balance
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
@@ -32,7 +44,7 @@ PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
 PoloniexCompleteBalance btcBalance = service.returnBalance("BTC");
 ```
 
-Return fee info/schedule
+### Return fee info/schedule
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
@@ -40,7 +52,7 @@ PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
 PoloniexFeeInfo feeInfo = service.returnFeeInfo();
 ```
 
-Return open orders
+### Return open orders
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
@@ -48,7 +60,7 @@ PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
 List<PoloniexOpenOrder> UsdtBtcOpenOrders = service.returnOpenOrders("USDT_BTC");
 ```
 
-Return trade history
+### Return trade history
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
@@ -56,7 +68,7 @@ PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
 List<PoloniexTradeHistory> UsdtBtcTradeHistory = service.returnTradeHistory("USDT_BTC");
 ```
 
-Buy
+### Buy
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
@@ -68,10 +80,11 @@ BigDecimal amount = BigDecimal.ONE;
 boolean fillOrKill = false;
 boolean immediateOrCancel = false;
 boolean postOnly = false;
-PoloniexOrderResult buyOrderResult = service.buy(currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
+PoloniexOrderResult buyOrderResult = 
+      service.buy(currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
 ```
 
-Sell
+### Sell
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
@@ -83,10 +96,11 @@ BigDecimal amount = BigDecimal.ONE;
 boolean fillOrKill = false;
 boolean immediateOrCancel = false;
 boolean postOnly = false;
-PoloniexOrderResult buyOrderResult = service.sell(currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
+PoloniexOrderResult buyOrderResult = 
+      service.sell(currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
 ```
 
-Cancel order  
+### Cancel order  
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
@@ -96,7 +110,7 @@ String orderNumber = "123456789";
 boolean success = service.cancelOrder(orderNumber);
 ```
 
-Move order  
+### Move order  
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
