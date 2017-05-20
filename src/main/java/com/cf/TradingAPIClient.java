@@ -14,7 +14,7 @@ public interface TradingAPIClient
 
     public String returnFeeInfo();
     
-    public String returnOpenOrders();
+    public String returnOpenOrders(String currencyPair);
     
     public String returnTradeHistory(String currencyPair);
     

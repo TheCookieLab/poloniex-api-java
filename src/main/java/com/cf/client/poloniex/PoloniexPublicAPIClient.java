@@ -3,7 +3,7 @@ package com.cf.client.poloniex;
 import com.cf.PriceDataAPIClient;
 import com.cf.client.HTTPClient;
 import java.io.IOException;
-import org.apache.log4j.LogManager;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
