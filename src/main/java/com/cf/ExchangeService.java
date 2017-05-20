@@ -27,9 +27,7 @@ public interface ExchangeService
     public final static Long DAILY_TIME_PERIOD = 86_400L;
     public final static Long LONG_LONG_AGO = 1_439_000_000L;
 
-    public List<PoloniexChartData> returnBTCChartData(Long periodInSeconds, Long startEpochInSeconds);
-    
-    public List<PoloniexChartData> returnETHChartData(Long periodInSeconds, Long startEpochInSeconds);
+    public List<PoloniexChartData> returnChartData(String currencyPair, Long periodInSeconds, Long startEpochInSeconds);
     
     public PoloniexTicker returnTicker(String currencyName);
 
@@ -42,6 +40,8 @@ public interface ExchangeService
     public List<PoloniexTradeHistory> returnTradeHistory(String currencyPair);
     
     public boolean cancelOrder(String orderNumber);
+    
+    public PoloniexOrderResult moveOrder(String orderNumber, BigDecimal rate, Boolean immediateOrCancel, Boolean postOnly);
     
     public PoloniexOrderResult sell(String currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly);
 

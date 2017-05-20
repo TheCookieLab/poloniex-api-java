@@ -14,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.log4j.LogManager;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -53,10 +53,10 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
     }
 
     @Override
-    public String returnOpenOrders()
+    public String returnOpenOrders(String currencyPair)
     {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
-        additionalPostParams.add(new BasicNameValuePair("currencyPair", "all"));
+        additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair));
         return returnTradingAPICommandResults("returnOpenOrders", additionalPostParams);
     }
 

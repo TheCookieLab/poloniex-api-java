@@ -8,8 +8,8 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Properties;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -46,7 +46,7 @@ public class GetDailyBTCChartDataExample
 
         PoloniexExchangeService service = new PoloniexExchangeService(tradingAPIKey, tradingAPISecret);
         Long yesterdayEpochSecond = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toEpochSecond();
-        List<PoloniexChartData> btcDailyChartData = service.returnBTCChartData(PoloniexExchangeService.DAILY_TIME_PERIOD, yesterdayEpochSecond);
+        List<PoloniexChartData> btcDailyChartData = service.returnChartData(PoloniexExchangeService.USDT_BTC_CURRENCY_PAIR, PoloniexExchangeService.DAILY_TIME_PERIOD, yesterdayEpochSecond);
         LOG.info(btcDailyChartData);
     }
 
