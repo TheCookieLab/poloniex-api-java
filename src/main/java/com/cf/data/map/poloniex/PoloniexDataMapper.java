@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class PoloniexDataMapper
         Map<String, List<PoloniexOpenOrder>> openOrders = gson.fromJson(openOrdersResults, new TypeToken<Map<String, List<PoloniexOpenOrder>>>()
         {
         }.getType());
-        return openOrders.get(currencyPair);
+        return openOrders.getOrDefault(currencyPair, new ArrayList<>());
     }
 
     public List<PoloniexTradeHistory> mapTradeHistory(String tradeHistoryResults)

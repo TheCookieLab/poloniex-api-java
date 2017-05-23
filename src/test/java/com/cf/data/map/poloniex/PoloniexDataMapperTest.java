@@ -1,6 +1,7 @@
 package com.cf.data.map.poloniex;
 
 import com.cf.data.model.poloniex.PoloniexFeeInfo;
+import com.cf.data.model.poloniex.PoloniexOpenOrder;
 import com.cf.data.model.poloniex.PoloniexOrderResult;
 import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import java.math.BigDecimal;
@@ -125,6 +126,13 @@ public class PoloniexDataMapperTest
         assertNull(orderResult.orderNumber);
         assertNull(orderResult.resultingTrades);
         assertNotNull(orderResult.error);               
+    }
+    
+    @Test
+    public void mapEmptyOpenOrders() {
+        String data = "[]";
+        List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders("USDT_BTC", data);
+        assertTrue(openOrders.isEmpty());
     }
 
     @Test
