@@ -56,9 +56,18 @@ public class PoloniexExchangeService implements ExchangeService
     public List<PoloniexChartData> returnChartData(String currencyPair, Long periodInSeconds, Long startEpochInSeconds)
     {
         long start = System.currentTimeMillis();
-        String chartDataResult = publicClient.getChartData(currencyPair, periodInSeconds, startEpochInSeconds);
-        List<PoloniexChartData> chartData = mapper.mapChartData(chartDataResult);
-        LOG.debug("Retrieved and mapped " + currencyPair + " chart data in " + (System.currentTimeMillis() - start) + " ms");
+        List<PoloniexChartData> chartData = new ArrayList<PoloniexChartData>();
+        try
+        {
+            String chartDataResult = publicClient.getChartData(currencyPair, periodInSeconds, startEpochInSeconds);
+            chartData = mapper.mapChartData(chartDataResult);
+            LOG.debug("Retrieved and mapped " + currencyPair + " chart data in " + (System.currentTimeMillis() - start) + " ms");
+        }
+        catch (Exception ex)
+        {
+            LOG.error("Error retrieving chart data for {} - {}", currencyPair, ex.getMessage());
+        }
+
         return chartData;
     }
 
@@ -73,18 +82,19 @@ public class PoloniexExchangeService implements ExchangeService
     public PoloniexTicker returnTicker(String currencyPair)
     {
         long start = System.currentTimeMillis();
+        PoloniexTicker tickerResult = null;
         try
         {
             String tickerData = publicClient.returnTicker();
-            PoloniexTicker tickerResult = mapper.mapTickerForCurrency(currencyPair, tickerData);
+            tickerResult = mapper.mapTickerForCurrency(currencyPair, tickerData);
             LOG.trace("Retrieved and mapped {} ticker in {} ms", currencyPair, System.currentTimeMillis() - start);
-            return tickerResult;
         }
         catch (Exception ex)
         {
             LOG.error("Error retrieving ticker for {} - {}", currencyPair, ex.getMessage());
-            return null;
         }
+
+        return tickerResult;
     }
 
     /**
@@ -98,18 +108,19 @@ public class PoloniexExchangeService implements ExchangeService
     public PoloniexCompleteBalance returnBalance(String currencyType)
     {
         long start = System.currentTimeMillis();
+        PoloniexCompleteBalance balance = null;
         try
         {
             String completeBalancesResult = tradingClient.returnCompleteBalances();
-            PoloniexCompleteBalance balance = mapper.mapCompleteBalanceResultForCurrency(currencyType, completeBalancesResult);
+            balance = mapper.mapCompleteBalanceResultForCurrency(currencyType, completeBalancesResult);
             LOG.trace("Retrieved and mapped {} complete balance in {} ms", currencyType, System.currentTimeMillis() - start);
-            return balance;
         }
         catch (Exception ex)
         {
             LOG.error("Error retrieving complete balance for {} - {}", currencyType, ex.getMessage());
-            return null;
         }
+
+        return balance;
     }
 
     /**
@@ -122,18 +133,19 @@ public class PoloniexExchangeService implements ExchangeService
     public PoloniexFeeInfo returnFeeInfo()
     {
         long start = System.currentTimeMillis();
+        PoloniexFeeInfo feeInfo = null;
         try
         {
             String feeInfoResult = tradingClient.returnFeeInfo();
-            PoloniexFeeInfo feeInfo = mapper.mapFeeInfo(feeInfoResult);
+            feeInfo = mapper.mapFeeInfo(feeInfoResult);
             LOG.trace("Retrieved and mapped Poloniex fee info in {} ms", System.currentTimeMillis() - start);
-            return feeInfo;
         }
         catch (Exception ex)
         {
             LOG.error("Error retrieving fee info - {}", ex.getMessage());
-            return null;
         }
+
+        return feeInfo;
     }
 
     /**
@@ -147,18 +159,20 @@ public class PoloniexExchangeService implements ExchangeService
     public List<PoloniexOpenOrder> returnOpenOrders(String currencyPair)
     {
         long start = System.currentTimeMillis();
+        List<PoloniexOpenOrder> openOrders = new ArrayList<PoloniexOpenOrder>();
         try
         {
             String openOrdersData = tradingClient.returnOpenOrders(currencyPair);
-            List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(currencyPair, openOrdersData);
+            openOrders = mapper.mapOpenOrders(currencyPair, openOrdersData);
             LOG.trace("Retrieved and mapped {} {} open orders in {} ms", openOrders.size(), currencyPair, System.currentTimeMillis() - start);
             return openOrders;
         }
         catch (Exception ex)
         {
             LOG.error("Error retrieving open orders for {} - {}", currencyPair, ex.getMessage());
-            return new ArrayList<>();
         }
+
+        return openOrders;
     }
 
     /**
@@ -172,18 +186,20 @@ public class PoloniexExchangeService implements ExchangeService
     public List<PoloniexTradeHistory> returnTradeHistory(String currencyPair)
     {
         long start = System.currentTimeMillis();
+        List<PoloniexTradeHistory> tradeHistory = new ArrayList<PoloniexTradeHistory>();
         try
         {
             String tradeHistoryData = tradingClient.returnTradeHistory(currencyPair);
-            List<PoloniexTradeHistory> tradeHistory = mapper.mapTradeHistory(tradeHistoryData);
+            tradeHistory = mapper.mapTradeHistory(tradeHistoryData);
             LOG.trace("Retrieved and mapped {} {} trade history in {} ms", tradeHistory.size(), currencyPair, System.currentTimeMillis() - start);
             return tradeHistory;
         }
         catch (Exception ex)
         {
             LOG.error("Error retrieving trade history for {} - {}", currencyPair, ex.getMessage());
-            return new ArrayList<>();
         }
+
+        return tradeHistory;
     }
 
     /**
@@ -202,18 +218,19 @@ public class PoloniexExchangeService implements ExchangeService
     public PoloniexOrderResult sell(String currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {
         long start = System.currentTimeMillis();
+        PoloniexOrderResult orderResult = null;
         try
         {
             String sellTradeResult = tradingClient.sell(currencyPair, sellPrice, amount, fillOrKill, immediateOrCancel, postOnly);
-            PoloniexOrderResult orderResult = mapper.mapTradeOrder(sellTradeResult);
+            orderResult = mapper.mapTradeOrder(sellTradeResult);
             LOG.trace("Executed and mapped {} sell order {} in {} ms", currencyPair, sellTradeResult, System.currentTimeMillis() - start);
-            return orderResult;
         }
         catch (Exception ex)
         {
             LOG.error("Error executing sell order for {} - {}", currencyPair, ex.getMessage());
-            return null;
         }
+
+        return orderResult;
     }
 
     /**
@@ -232,18 +249,19 @@ public class PoloniexExchangeService implements ExchangeService
     public PoloniexOrderResult buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {
         long start = System.currentTimeMillis();
+        PoloniexOrderResult orderResult = null;
         try
         {
             String buyTradeResult = tradingClient.buy(currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
-            PoloniexOrderResult orderResult = mapper.mapTradeOrder(buyTradeResult);
+            orderResult = mapper.mapTradeOrder(buyTradeResult);
             LOG.trace("Executed and mapped {} buy order {} in {} ms", currencyPair, buyTradeResult, System.currentTimeMillis() - start);
-            return orderResult;
         }
         catch (Exception ex)
         {
             LOG.error("Error executing buy order for {} - {}", currencyPair, ex.getMessage());
-            return null;
         }
+
+        return orderResult;
     }
 
     /**
@@ -257,36 +275,39 @@ public class PoloniexExchangeService implements ExchangeService
     public boolean cancelOrder(String orderNumber)
     {
         long start = System.currentTimeMillis();
+        boolean success = false;
         try
         {
             String cancelOrderResult = tradingClient.cancelOrder(orderNumber);
-            boolean success = mapper.mapCancelOrder(cancelOrderResult);
+            success = mapper.mapCancelOrder(cancelOrderResult);
             LOG.trace("Executed and mapped cancel order for {} in {} ms", orderNumber, System.currentTimeMillis() - start);
             return success;
         }
         catch (Exception ex)
         {
             LOG.error("Error executing cancel order for {} - {}", orderNumber, ex.getMessage());
-            return false;
         }
+
+        return success;
     }
 
     @Override
     public PoloniexOrderResult moveOrder(String orderNumber, BigDecimal rate, Boolean immediateOrCancel, Boolean postOnly)
     {
         long start = System.currentTimeMillis();
+        PoloniexOrderResult orderResult = null;
         try
         {
             String moveOrderResult = tradingClient.moveOrder(orderNumber, rate);
-            PoloniexOrderResult orderResult = mapper.mapTradeOrder(moveOrderResult);
+            orderResult = mapper.mapTradeOrder(moveOrderResult);
             LogManager.getLogger(PoloniexExchangeService.class).trace("Executed and mapped move order for {} in {} ms", orderNumber, System.currentTimeMillis() - start);
-            return orderResult;
         }
         catch (Exception ex)
         {
             LogManager.getLogger(PoloniexExchangeService.class).error("Error executing move order for {} - {}", orderNumber, ex.getMessage());
-            return null;
         }
+
+        return orderResult;
     }
 
 }
