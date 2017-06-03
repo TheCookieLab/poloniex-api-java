@@ -1,5 +1,6 @@
 package com.cf.data.model.poloniex;
 
+import com.google.gson.Gson;
 import java.util.List;
 
 /**
@@ -17,5 +18,11 @@ public class PoloniexOrderResult
         this.orderNumber = orderNumber;
         this.resultingTrades = resultingTrades;
         this.error = error;
+    }
+
+    @Override
+    public String toString()
+    {
+        return new Gson().toJson(this);
     }
 }
