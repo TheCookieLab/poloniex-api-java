@@ -23,6 +23,14 @@ PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
 PoloniexTicker btcTicker = service.returnTicker("USDT_BTC");
 ```
 
+### Return all market pairs
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+List<String> marketsList = service.returnAllMarkets();
+```
+
 ### Return chart data  
 ```java
 String apiKey = "foo";
