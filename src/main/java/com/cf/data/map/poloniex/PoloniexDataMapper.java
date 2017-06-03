@@ -67,6 +67,14 @@ public class PoloniexDataMapper
         return tickerResults.get(currencyType);
     }
 
+    public List<String> mapMarkets(String tickerData)
+    {
+        Map<String, PoloniexTicker> tickerResults = gson.fromJson(tickerData, new TypeToken<Map<String, PoloniexTicker>>()
+        {
+        }.getType());
+        return new ArrayList<>(tickerResults.keySet());
+    }
+
     public PoloniexCompleteBalance mapCompleteBalanceResultForCurrency(String currencyType, String completeBalanceResults)
     {
         Map<String, PoloniexCompleteBalance> balanceResults = gson.fromJson(completeBalanceResults, new TypeToken<Map<String, PoloniexCompleteBalance>>()

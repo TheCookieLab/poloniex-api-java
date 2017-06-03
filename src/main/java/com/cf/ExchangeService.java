@@ -26,10 +26,12 @@ public interface ExchangeService
     public final static Long TWO_HOUR_TIME_PERIOD = 7_200L;
     public final static Long DAILY_TIME_PERIOD = 86_400L;
     public final static Long LONG_LONG_AGO = 1_439_000_000L;
-
+    
     public List<PoloniexChartData> returnChartData(String currencyPair, Long periodInSeconds, Long startEpochInSeconds);
     
     public PoloniexTicker returnTicker(String currencyName);
+    
+    public List<String> returnAllMarkets();
 
     public PoloniexCompleteBalance returnBalance(String currencyName);
 

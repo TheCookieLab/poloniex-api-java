@@ -97,6 +97,25 @@ public class PoloniexExchangeService implements ExchangeService
         return tickerResult;
     }
 
+    @Override
+    public List<String> returnAllMarkets()
+    {
+        long start = System.currentTimeMillis();
+        List<String> allMarkets = new ArrayList<String>();
+        try
+        {
+            String tickerData = publicClient.returnTicker();
+            allMarkets = mapper.mapMarkets(tickerData);
+            LOG.trace("Retrieved and mapped market pairs in {} ms", System.currentTimeMillis() - start);
+        }
+        catch (Exception ex)
+        {
+            LOG.error("Error retrieving all markets - {}", ex.getMessage());
+        }
+        
+        return allMarkets;
+    }
+
     /**
      * *
      * Returns the balance for specified currency type
@@ -309,5 +328,4 @@ public class PoloniexExchangeService implements ExchangeService
 
         return orderResult;
     }
-
 }
