@@ -1,5 +1,5 @@
 # poloniex-api-java
-Java API client for the Poloniex exchange
+Java API client for the Poloniex exchange with focus on simplicity and usability. 
 
 Using this client is as simple as instantiating a new PoloniexExchangeService with your Poloniex API Key and API Secret as constructor parameters:
 
