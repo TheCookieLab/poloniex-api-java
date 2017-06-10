@@ -13,9 +13,7 @@ import com.cf.data.model.poloniex.PoloniexTicker;
 import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -184,32 +182,13 @@ public class PoloniexExchangeService implements ExchangeService
         try
         {
             String openOrdersData = tradingClient.returnOpenOrders(currencyPair);
-            openOrders = mapper.mapOpenOrders(openOrdersData).get(currencyPair);
+            openOrders = mapper.mapOpenOrders(openOrdersData);
             LOG.trace("Retrieved and mapped {} {} open orders in {} ms", openOrders.size(), currencyPair, System.currentTimeMillis() - start);
             return openOrders;
         }
         catch (Exception ex)
         {
             LOG.error("Error retrieving open orders for {} - {}", currencyPair, ex.getMessage());
-        }
-
-        return openOrders;
-    }
-
-    public Map<String, List<PoloniexOpenOrder>> returnAllOpenOrders()
-    {
-        long start = System.currentTimeMillis();
-        Map<String, List<PoloniexOpenOrder>> openOrders = new HashMap<>();
-        try
-        {
-            String openOrdersData = tradingClient.returnOpenOrders("all");
-            openOrders = mapper.mapOpenOrders(openOrdersData);
-            LOG.trace("Retrieved and mapped {} open orders in {} ms", openOrders.size(), System.currentTimeMillis() - start);
-            return openOrders;
-        }
-        catch (Exception ex)
-        {
-            LOG.error("Error retrieving all open orders for - {}", ex.getMessage());
         }
 
         return openOrders;

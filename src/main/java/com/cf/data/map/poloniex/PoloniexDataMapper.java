@@ -83,9 +83,9 @@ public class PoloniexDataMapper
         return balanceResults.get(currencyType);
     }
 
-    public Map<String, List<PoloniexOpenOrder>> mapOpenOrders(String openOrdersResults)
+    public List<PoloniexOpenOrder> mapOpenOrders(String openOrdersResults)
     {
-        Map<String, List<PoloniexOpenOrder>> openOrders = gson.fromJson(openOrdersResults, new TypeToken<Map<String, List<PoloniexOpenOrder>>>()
+        List<PoloniexOpenOrder> openOrders = gson.fromJson(openOrdersResults, new TypeToken<List<PoloniexOpenOrder>>()
         {
         }.getType());
         return openOrders;

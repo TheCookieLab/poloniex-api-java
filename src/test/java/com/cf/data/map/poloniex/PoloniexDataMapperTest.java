@@ -6,7 +6,6 @@ import com.cf.data.model.poloniex.PoloniexOrderResult;
 import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -132,8 +131,15 @@ public class PoloniexDataMapperTest
     @Test
     public void mapEmptyOpenOrders() {
         String data = "[]";
-        Map<String, List<PoloniexOpenOrder>> openOrders = mapper.mapOpenOrders(data);
+        List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
         assertTrue(openOrders.isEmpty());
+    }
+    
+    @Test
+    public void mapOpenOrders() {
+        String data = "[{\"orderNumber\":\"120466\",\"type\":\"sell\",\"rate\":\"0.025\",\"amount\":\"100\",\"total\":\"2.5\"},{\"orderNumber\":\"120467\",\"type\":\"sell\",\"rate\":\"0.04\",\"amount\":\"100\",\"total\":\"4\"}]";
+        List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
+        assertEquals(2, openOrders.size());
     }
 
     @Test
