@@ -131,7 +131,7 @@ public class PoloniexDataMapperTest
     @Test
     public void mapEmptyOpenOrders() {
         String data = "[]";
-        List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders("USDT_BTC", data);
+        List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
         assertTrue(openOrders.isEmpty());
     }
 
