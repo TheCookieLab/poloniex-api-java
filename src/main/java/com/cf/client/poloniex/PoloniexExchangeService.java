@@ -61,7 +61,7 @@ public class PoloniexExchangeService implements ExchangeService
         {
             String chartDataResult = publicClient.getChartData(currencyPair, periodInSeconds, startEpochInSeconds);
             chartData = mapper.mapChartData(chartDataResult);
-            LOG.debug("Retrieved and mapped " + currencyPair + " chart data in " + (System.currentTimeMillis() - start) + " ms");
+            LOG.debug("Retrieved and mapped {} chart data in {} ms", currencyPair, (System.currentTimeMillis() - start));
         }
         catch (Exception ex)
         {
@@ -182,7 +182,7 @@ public class PoloniexExchangeService implements ExchangeService
         try
         {
             String openOrdersData = tradingClient.returnOpenOrders(currencyPair);
-            openOrders = mapper.mapOpenOrders(currencyPair, openOrdersData);
+            openOrders = mapper.mapOpenOrders(openOrdersData);
             LOG.trace("Retrieved and mapped {} {} open orders in {} ms", openOrders.size(), currencyPair, System.currentTimeMillis() - start);
             return openOrders;
         }
