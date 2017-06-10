@@ -12,7 +12,6 @@ import ws.wamp.jawampa.PubSubData;
 public class PoloniexSubscription implements Action1<PubSubData>
 {
     public static final PoloniexSubscription TICKER = new PoloniexSubscription("ticker");
-    public static final PoloniexSubscription TROLLBOX = new PoloniexSubscription("trollbox");
 
     protected final static Logger LOG = LogManager.getLogger();
     public final String feedName;
