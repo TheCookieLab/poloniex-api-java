@@ -149,5 +149,6 @@ To setup your own subscription handler, just extend the PoloniexSubscription cla
 Your support is always welcome!
 
 BTC: 1FnpWiJ2Lo89E4x26w5jsYhmXJS9sUBR3b
+
 ETH: 0x5F99D8DD2d504369657f15101e9a0cdF0fAbb799
 
