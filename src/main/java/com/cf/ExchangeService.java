@@ -21,6 +21,7 @@ public interface ExchangeService
     public final static String USDT_ETH_CURRENCY_PAIR = "USDT_ETH";
     public final static String BTC_CURRENCY_TYPE = "BTC";
     public final static String ETH_CURRENCY_TYPE = "ETH";
+    public final static Long FIVE_MINUTES_TIME_PERIOD = 300L;
     public final static Long FIFTEEN_MINUTES_TIME_PERIOD = 900L;
     public final static Long FOUR_HOUR_TIME_PERIOD = 14_400L;
     public final static Long TWO_HOUR_TIME_PERIOD = 7_200L;
