@@ -91,6 +91,14 @@ public class PoloniexDataMapper
         return openOrders;
     }
 
+    public Map<String, List<PoloniexOpenOrder>> mapAllOpenOrders(String allOpenOrdersResults)
+    {
+        Map<String, List<PoloniexOpenOrder>> allOpenOrders = gson.fromJson(allOpenOrdersResults, new TypeToken<Map<String, List<PoloniexOpenOrder>>>()
+        {
+        }.getType());
+        return allOpenOrders;
+    }
+
     public List<PoloniexTradeHistory> mapTradeHistory(String tradeHistoryResults)
     {
         List<PoloniexTradeHistory> tradeHistory = gson.fromJson(tradeHistoryResults, new TypeToken<List<PoloniexTradeHistory>>()

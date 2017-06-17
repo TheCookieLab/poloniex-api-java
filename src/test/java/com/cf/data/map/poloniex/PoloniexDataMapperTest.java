@@ -141,6 +141,16 @@ public class PoloniexDataMapperTest
         List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
         assertEquals(2, openOrders.size());
     }
+    
+    /***
+     * TODO
+     */
+    @Test
+    public void mapAllOpenOrders() {
+        String data = "[{\"orderNumber\":\"120466\",\"type\":\"sell\",\"rate\":\"0.025\",\"amount\":\"100\",\"total\":\"2.5\"},{\"orderNumber\":\"120467\",\"type\":\"sell\",\"rate\":\"0.04\",\"amount\":\"100\",\"total\":\"4\"}]";
+        List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
+        assertEquals(2, openOrders.size());
+    }
 
     @Test
     public void mapTradeHistory()

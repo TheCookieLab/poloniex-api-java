@@ -13,7 +13,9 @@ import com.cf.data.model.poloniex.PoloniexTicker;
 import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -192,6 +194,31 @@ public class PoloniexExchangeService implements ExchangeService
         }
 
         return openOrders;
+    }
+
+    /**
+     * *
+     * Returns your open orders across all markets
+     *
+     * @return
+     */
+    public Map<String, List<PoloniexOpenOrder>> returnAllOpenOrders()
+    {
+        long start = System.currentTimeMillis();
+        Map<String, List<PoloniexOpenOrder>> allOpenOrders = new HashMap<>();
+        try
+        {
+            String openOrdersData = tradingClient.returnOpenOrders("all");
+            allOpenOrders = mapper.mapAllOpenOrders(openOrdersData);
+            LOG.trace("Retrieved and mapped {} open orders in {} ms", allOpenOrders.size(), System.currentTimeMillis() - start);
+            return allOpenOrders;
+        }
+        catch (Exception ex)
+        {
+            LOG.error("Error retrieving all open orders - {}", ex.getMessage());
+        }
+
+        return allOpenOrders;
     }
 
     /**
