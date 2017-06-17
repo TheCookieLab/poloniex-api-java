@@ -136,7 +136,7 @@ The following example sets up subscriptions to the general ticker as well as the
 ```java
 try (WSSClient poloniexWSSClient = new WSSClient("wss://api.poloniex.com", "realm1")) {
     poloniexWSSClient.subscribe(PoloniexSubscription.TICKER);
-	poloniexWSSClient.subscribe(new PoloniexSubscription("USDT_BTC"));
+    poloniexWSSClient.subscribe(new PoloniexSubscription("USDT_BTC"));
     poloniexWSSClient.run(60000);
 }
 ```
