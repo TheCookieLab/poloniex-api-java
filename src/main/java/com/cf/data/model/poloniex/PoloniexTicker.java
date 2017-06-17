@@ -12,16 +12,16 @@ public class PoloniexTicker
     public final BigDecimal last;
     public final BigDecimal lowestAsk;
     public final BigDecimal highestBid;
-    public final BigDecimal percentageChange;
+    public final BigDecimal percentChange;
     public final BigDecimal baseVolume;
     public final BigDecimal quoteVolume;
 
-    public PoloniexTicker(BigDecimal last, BigDecimal lowestAsk, BigDecimal highestBid, BigDecimal percentageChange, BigDecimal baseVolume, BigDecimal quoteVolume)
+    public PoloniexTicker(BigDecimal last, BigDecimal lowestAsk, BigDecimal highestBid, BigDecimal percentChange, BigDecimal baseVolume, BigDecimal quoteVolume)
     {
         this.last = last;
         this.lowestAsk = lowestAsk;
         this.highestBid = highestBid;
-        this.percentageChange = percentageChange;
+        this.percentChange = percentChange;
         this.baseVolume = baseVolume;
         this.quoteVolume = quoteVolume;
     }
