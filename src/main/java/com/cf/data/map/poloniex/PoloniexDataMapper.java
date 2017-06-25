@@ -1,5 +1,7 @@
 package com.cf.data.map.poloniex;
 
+import com.cf.data.model.poloniex.PoloniexLoan;
+import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
 import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexCompleteBalance;
 import com.cf.data.model.poloniex.PoloniexFeeInfo;
@@ -14,6 +16,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
@@ -57,6 +60,13 @@ public class PoloniexDataMapper
         }.getType());
 
         return feeInfo;
+    }
+
+    public PoloniexActiveLoanTypes mapActiveLoans(String activeLoansResult)
+    {
+    	PoloniexActiveLoanTypes activeLoanTypes = gson.fromJson(activeLoansResult, PoloniexActiveLoanTypes.class);
+
+        return activeLoanTypes;
     }
 
     public PoloniexTicker mapTickerForCurrency(String currencyType, String tickerData)
