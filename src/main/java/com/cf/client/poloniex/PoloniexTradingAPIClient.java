@@ -100,6 +100,12 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
         return trade("buy", currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
     }
 
+    @Override
+    public String returnActiveLoans()
+    {
+        return this.returnTradingAPICommandResults("returnActiveLoans");
+    }
+
     private String trade(String tradeType, String currencyPair, BigDecimal rate, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {
         List<NameValuePair> additionalPostParams = new ArrayList<>();

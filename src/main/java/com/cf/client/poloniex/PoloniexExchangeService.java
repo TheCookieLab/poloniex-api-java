@@ -4,6 +4,8 @@ import com.cf.ExchangeService;
 import com.cf.PriceDataAPIClient;
 import com.cf.TradingAPIClient;
 import com.cf.data.map.poloniex.PoloniexDataMapper;
+import com.cf.data.model.poloniex.PoloniexLoan;
+import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
 import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexCompleteBalance;
 import com.cf.data.model.poloniex.PoloniexFeeInfo;
@@ -165,6 +167,31 @@ public class PoloniexExchangeService implements ExchangeService
         }
 
         return feeInfo;
+    }
+
+    /**
+     * *
+     * Returns the active loans from Poloniex
+     *
+     * @return PoloniexActiveLoanTypes
+     */
+    @Override
+    public PoloniexActiveLoanTypes returnActiveLoans()
+    {
+        long start = System.currentTimeMillis();
+        PoloniexActiveLoanTypes activeLoanTypes = null;
+        try
+        {
+            String activeLoansResult = tradingClient.returnActiveLoans();
+            activeLoanTypes = mapper.mapActiveLoans(activeLoansResult);
+            LOG.trace("Retrieved and mapped Poloniex active loans in {} ms", System.currentTimeMillis() - start);
+        }
+        catch (Exception ex)
+        {
+            LOG.error("Error retrieving active loans - {}", ex.getMessage());
+        }
+
+        return activeLoanTypes;
     }
 
     /**
