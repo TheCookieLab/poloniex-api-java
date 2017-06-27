@@ -1,12 +1,6 @@
 package com.cf.data.map.poloniex;
 
-import com.cf.data.model.poloniex.PoloniexChartData;
-import com.cf.data.model.poloniex.PoloniexCompleteBalance;
-import com.cf.data.model.poloniex.PoloniexFeeInfo;
-import com.cf.data.model.poloniex.PoloniexOpenOrder;
-import com.cf.data.model.poloniex.PoloniexOrderResult;
-import com.cf.data.model.poloniex.PoloniexTicker;
-import com.cf.data.model.poloniex.PoloniexTradeHistory;
+import com.cf.data.model.poloniex.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -111,6 +105,38 @@ public class PoloniexDataMapper
         {
         }.getType());
         return tradeOrderResult;
+    }
+
+    public List<PoloniexLendingHistory> mapLendingHistory(String lendingHistoryResults)
+    {
+        List<PoloniexLendingHistory> lendingHistory = gson.fromJson(lendingHistoryResults, new TypeToken<List<PoloniexLendingHistory>>()
+        {
+        }.getType());
+        return lendingHistory;
+    }
+
+    public Map<String,List<PoloniexActiveLoan>> mapActiveLoans(String activeLoansResults)
+    {
+        Map<String,List<PoloniexActiveLoan>> lendingHistory = gson.fromJson(activeLoansResults, new TypeToken<Map<String,List<PoloniexActiveLoan>>>()
+        {
+        }.getType());
+        return lendingHistory;
+    }
+
+    public List<PoloniexLoanOffer> mapOpenLoanOffers(String currency, String results)
+    {
+        Map<String,List<PoloniexLoanOffer>> offers = gson.fromJson(results, new TypeToken<Map<String,List<PoloniexLoanOffer>>>()
+        {
+        }.getType());
+        return offers.get(currency);
+    }
+
+    public PoloniexLendingResult mapLendingResult(String result)
+    {
+        PoloniexLendingResult plr = gson.fromJson(result, new TypeToken<PoloniexLendingResult>()
+        {
+        }.getType());
+        return plr;
     }
 
 }

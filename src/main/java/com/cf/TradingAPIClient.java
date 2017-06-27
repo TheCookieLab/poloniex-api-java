@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 /**
  *
  * @author David
- * @author cheolhee
  */
 public interface TradingAPIClient
 {
