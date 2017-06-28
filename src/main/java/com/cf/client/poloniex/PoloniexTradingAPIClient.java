@@ -114,7 +114,6 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
         return trade("buy", currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
     }
 
-
     // Lending APIs
 
     @Override
@@ -170,7 +169,6 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
         additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
         return returnTradingAPICommandResults("toggleAutoRenew", additionalPostParams);
     }
-
 
     private String trade(String tradeType, String currencyPair, BigDecimal rate, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {

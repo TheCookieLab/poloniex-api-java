@@ -1,6 +1,8 @@
 package com.cf;
 
 
+import com.cf.data.model.poloniex.PoloniexLoan;
+import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
 import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexCompleteBalance;
 import com.cf.data.model.poloniex.PoloniexFeeInfo;
@@ -49,5 +51,7 @@ public interface ExchangeService
     public PoloniexOrderResult sell(String currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly);
 
     public PoloniexOrderResult buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly);
+
+	public PoloniexActiveLoanTypes returnActiveLoans();
 
 }

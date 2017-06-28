@@ -26,7 +26,6 @@ public interface TradingAPIClient
 
     public String buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly);
 
-
     // Lending APIs
     public String returnActiveLoans();
 
@@ -39,6 +38,5 @@ public interface TradingAPIClient
     public String returnOpenLoanOffers();
 
     public String toggleAutoRenew(String orderNumber);
-
 
 }
