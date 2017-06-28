@@ -3,22 +3,24 @@ package com.cf.client.poloniex;
 
 import com.cf.TradingAPIClient;
 import com.cf.client.HTTPClient;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.logging.log4j.LogManager;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.logging.log4j.LogManager;
 
 /**
  *
  * @author David
+ * @author cheolhee
  */
 public class PoloniexTradingAPIClient implements TradingAPIClient
 {
@@ -49,8 +51,20 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
     @Override
     public String returnCompleteBalances()
     {
-        return this.returnTradingAPICommandResults("returnCompleteBalances");
+        return returnCompleteBalances(false);
     }
+    public String returnCompleteBalances(boolean allAccounts)
+    {
+        if (allAccounts) {
+            returnCompleteBalances();
+            List<NameValuePair> additionalPostParams = new ArrayList<>();
+            additionalPostParams.add(new BasicNameValuePair("account", "all"));
+            return this.returnTradingAPICommandResults("returnCompleteBalances", additionalPostParams);
+        } else {
+            return this.returnTradingAPICommandResults("returnCompleteBalances");
+        }
+    }
+
 
     @Override
     public String returnOpenOrders(String currencyPair)
@@ -100,10 +114,60 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
         return trade("buy", currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
     }
 
+    // Lending APIs
+
     @Override
-    public String returnActiveLoans()
+    public String returnActiveLoans() {
+        return returnTradingAPICommandResults("returnActiveLoans");
+    }
+
+   @Override
+    public String returnLendingHistory(int hours, int limit) {
+        List<NameValuePair> additionalPostParams = new ArrayList<>();
+        long currentUnixtime = System.currentTimeMillis() / 1000;
+        long start = currentUnixtime - 60 * 60 * hours;
+        additionalPostParams.add(new BasicNameValuePair("start", "" + start));
+        additionalPostParams.add(new BasicNameValuePair("end", "" + currentUnixtime));
+        additionalPostParams.add(new BasicNameValuePair("limit", String.valueOf(limit)));
+
+        return returnTradingAPICommandResults("returnLendingHistory", additionalPostParams);
+    }
+
+    @Override
+    public String createLoanOffer(String currency, BigDecimal amount, BigDecimal lendingRate, int duration, boolean autoRenew)
     {
-        return this.returnTradingAPICommandResults("returnActiveLoans");
+        List<NameValuePair> additionalPostParams = new ArrayList<>();
+
+        additionalPostParams.add(new BasicNameValuePair("currency", currency));
+        additionalPostParams.add(new BasicNameValuePair("amount", amount.toPlainString()));
+        additionalPostParams.add(new BasicNameValuePair("lendingRate", lendingRate.toPlainString()));
+        additionalPostParams.add(new BasicNameValuePair("duration", "" + duration));
+        additionalPostParams.add(new BasicNameValuePair("autoRenew", autoRenew ? "1" : "0"));
+
+        return returnTradingAPICommandResults("createLoanOffer", additionalPostParams);
+
+    }
+
+    @Override
+    public String cancelLoanOffer(String orderNumber)
+    {
+        List<NameValuePair> additionalPostParams = new ArrayList<>();
+        additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
+        return returnTradingAPICommandResults("cancelLoanOffer", additionalPostParams);
+    }
+
+    @Override
+    public String returnOpenLoanOffers()
+    {
+        return returnTradingAPICommandResults("returnOpenLoanOffers");
+    }
+
+    @Override
+    public String toggleAutoRenew(String orderNumber)
+    {
+        List<NameValuePair> additionalPostParams = new ArrayList<>();
+        additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
+        return returnTradingAPICommandResults("toggleAutoRenew", additionalPostParams);
     }
 
     private String trade(String tradeType, String currencyPair, BigDecimal rate, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)

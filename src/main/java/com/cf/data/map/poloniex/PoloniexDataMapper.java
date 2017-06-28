@@ -21,10 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -121,6 +118,42 @@ public class PoloniexDataMapper
         {
         }.getType());
         return tradeOrderResult;
+    }
+
+    public List<PoloniexLendingHistory> mapLendingHistory(String lendingHistoryResults)
+    {
+        List<PoloniexLendingHistory> lendingHistory = gson.fromJson(lendingHistoryResults, new TypeToken<List<PoloniexLendingHistory>>()
+        {
+        }.getType());
+        return lendingHistory;
+    }
+
+    public Map<String,List<PoloniexActiveLoan>> mapActiveLoans(String activeLoansResults)
+    {
+        Map<String,List<PoloniexActiveLoan>> activeLoans = gson.fromJson(activeLoansResults, new TypeToken<Map<String,List<PoloniexActiveLoan>>>()
+        {
+        }.getType());
+        return activeLoans;
+    }
+
+    public List<PoloniexLoanOffer> mapOpenLoanOffers(String currency, String results)
+    {
+        // Trading API returns '[]' instead of '{}' when no offer exists.
+        if ("[]".equals(results)) {
+            return Collections.EMPTY_LIST;
+        }
+        Map<String,List<PoloniexLoanOffer>> offers = gson.fromJson(results, new TypeToken<Map<String,List<PoloniexLoanOffer>>>()
+        {
+        }.getType());
+        return offers.get(currency);
+    }
+
+    public PoloniexLendingResult mapLendingResult(String result)
+    {
+        PoloniexLendingResult plr = gson.fromJson(result, new TypeToken<PoloniexLendingResult>()
+        {
+        }.getType());
+        return plr;
     }
 
 }
