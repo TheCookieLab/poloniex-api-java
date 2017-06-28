@@ -12,10 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -117,14 +114,18 @@ public class PoloniexDataMapper
 
     public Map<String,List<PoloniexActiveLoan>> mapActiveLoans(String activeLoansResults)
     {
-        Map<String,List<PoloniexActiveLoan>> lendingHistory = gson.fromJson(activeLoansResults, new TypeToken<Map<String,List<PoloniexActiveLoan>>>()
+        Map<String,List<PoloniexActiveLoan>> activeLoans = gson.fromJson(activeLoansResults, new TypeToken<Map<String,List<PoloniexActiveLoan>>>()
         {
         }.getType());
-        return lendingHistory;
+        return activeLoans;
     }
 
     public List<PoloniexLoanOffer> mapOpenLoanOffers(String currency, String results)
     {
+        // Trading API returns '[]' instead of '{}' when no offer exists.
+        if ("[]".equals(results)) {
+            return Collections.EMPTY_LIST;
+        }
         Map<String,List<PoloniexLoanOffer>> offers = gson.fromJson(results, new TypeToken<Map<String,List<PoloniexLoanOffer>>>()
         {
         }.getType());

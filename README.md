@@ -128,6 +128,80 @@ String orderNumber = "123456789";
 boolean success = service.moveOrder(orderNumber);
 ```
 
+## Lending APIs
+### Active loans  
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
+Map<String, List<PoloniexActiveLoan>> loans = service.returnActiveLoans();
+List<PoloniexActiveLoan> list = loans.get(LendingService.PROVIDED_LOAD_TYPE);
+```
+### Create a loan offer  
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
+
+BigDecimal amount = new BigDecimal("0.01"); 
+BigDecimal lendingRate = new BigDecimal("0.0042"); // 0.42%
+int duration = 3; // 2 ~ 60
+PoloniexLendingResult result = service.createLoanOffer("BTC", amount, lendingRate, duration, true);
+```
+### Return open loan offers  
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
+List<PoloniexLoanOffer> list = service.returnOpenLoanOffers("BTC");
+```
+
+### Create loan offer  
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
+
+BigDecimal amount = new BigDecimal("0.01"); 
+BigDecimal lendingRate = new BigDecimal("0.0042"); // 0.42%
+int duration = 3; // 2 ~ 60
+PoloniexLendingResult result = service.createLoanOffer("BTC", amount, lendingRate, duration, true);
+```
+### Cancel loan offer  
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
+
+PoloniexLendingResult result = service.cancelLoanOffer("49375906");
+```
+
+### Toggle auto renew  
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
+
+PoloniexLendingResult result = service.toggleAutoRenew("8654331");
+```
+### Lending Histories  
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
+
+// Weekly Report
+List<PoloniexLendingHistory> lendingHistories = service.returnLendingHistory(24 * 7, 5000);
+BigDecimal sum = BigDecimal.ZERO;
+for (PoloniexLendingHistory h : lendingHistories)
+{
+  BigDecimal earned = h.earned;
+  sum = sum.add(earned);
+}
+```
+
+
+
 ## Websocket Interface
 
 Using Poloniex's websocket interface is also very simple. 
@@ -149,6 +223,5 @@ To setup your own subscription handler, just extend the PoloniexSubscription cla
 Your support is always welcome!
 
 BTC: 1FnpWiJ2Lo89E4x26w5jsYhmXJS9sUBR3b
-
 ETH: 0x5F99D8DD2d504369657f15101e9a0cdF0fAbb799
 
