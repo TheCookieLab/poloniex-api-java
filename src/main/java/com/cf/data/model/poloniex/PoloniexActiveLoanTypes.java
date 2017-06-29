@@ -1,8 +1,6 @@
 package com.cf.data.model.poloniex;
 
 import com.google.gson.Gson;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**

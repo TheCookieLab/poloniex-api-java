@@ -3,7 +3,7 @@ package com.cf.client.poloniex;
 import com.cf.LendingService;
 import com.cf.TradingAPIClient;
 import com.cf.data.map.poloniex.PoloniexDataMapper;
-import com.cf.data.model.poloniex.PoloniexActiveLoan;
+import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
 import com.cf.data.model.poloniex.PoloniexLendingHistory;
 import com.cf.data.model.poloniex.PoloniexLendingResult;
 import com.cf.data.model.poloniex.PoloniexLoanOffer;
@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author cheolhee
@@ -55,7 +54,8 @@ public class PoloniexLendingService implements LendingService
             lendingHistory = mapper.mapLendingHistory(lendingHistoryData);
             LOG.trace("Retrieved and mapped {} {} {} lendingHistory in {} ms", lendingHistory.size(), hours, limit, System.currentTimeMillis() - start);
             return lendingHistory;
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             LOG.error("Error retrieving lendingHistory for {} {} - {}", hours, limit, ex.getMessage());
         }
@@ -80,14 +80,15 @@ public class PoloniexLendingService implements LendingService
         {
             String res = tradingClient.createLoanOffer(currency, amount, lendingRate, duration, autoRenew);
             result = mapper.mapLendingResult(res);
-            LogManager.getLogger(PoloniexLendingService.class).trace("Executed and mapped createLoanOffer for {} {} {} {} {} in {} ms"
-                    , currency, amount.toPlainString(), lendingRate.toPlainString(), duration, autoRenew ? 1 : 0
-                    , System.currentTimeMillis() - start);
-        } catch (Exception ex)
+            LogManager.getLogger(PoloniexLendingService.class).trace("Executed and mapped createLoanOffer for {} {} {} {} {} in {} ms",
+                    currency, amount.toPlainString(), lendingRate.toPlainString(), duration, autoRenew ? 1 : 0,
+                    System.currentTimeMillis() - start);
+        }
+        catch (Exception ex)
         {
-            LogManager.getLogger(PoloniexLendingService.class).error("Error executing createLoanOffer for {} {} {} {} {} - {}"
-                    , currency, amount.toPlainString(), lendingRate.toPlainString(), duration, autoRenew ? 1 : 0
-                    , ex.getMessage());
+            LogManager.getLogger(PoloniexLendingService.class).error("Error executing createLoanOffer for {} {} {} {} {} - {}",
+                    currency, amount.toPlainString(), lendingRate.toPlainString(), duration, autoRenew ? 1 : 0,
+                    ex.getMessage());
         }
 
         return result;
@@ -107,7 +108,8 @@ public class PoloniexLendingService implements LendingService
             String res = tradingClient.cancelLoanOffer(orderNumber);
             result = mapper.mapLendingResult(res);
             LogManager.getLogger(PoloniexLendingService.class).trace("Executed and mapped cancelLoanOffer for {} in {} ms", orderNumber, System.currentTimeMillis() - start);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             LogManager.getLogger(PoloniexLendingService.class).error("Error executing cancelLoanOffer for {} - {}", orderNumber, ex.getMessage());
         }
@@ -119,22 +121,24 @@ public class PoloniexLendingService implements LendingService
      * @return
      */
     @Override
-    public Map<String, List<PoloniexActiveLoan>> returnActiveLoans()
+    public PoloniexActiveLoanTypes returnActiveLoans()
     {
         long start = System.currentTimeMillis();
-        Map<String, List<PoloniexActiveLoan>> mapActiveLoans = Collections.EMPTY_MAP;
+        PoloniexActiveLoanTypes activeLoanTypes = null;
+
         try
         {
             String res = tradingClient.returnActiveLoans();
-            mapActiveLoans = mapper.mapActiveLoans(res);
-            LOG.trace("Retrieved ActiveLoans {} in {} ms", mapActiveLoans.size(), System.currentTimeMillis() - start);
-            return mapActiveLoans;
-        } catch (Exception ex)
+            activeLoanTypes = mapper.mapActiveLoans(res);
+            LOG.trace("Retrieved ActiveLoans in {} ms", System.currentTimeMillis() - start);
+            return activeLoanTypes;
+        }
+        catch (Exception ex)
         {
             LOG.error("Error retrieving ActiveLoans - {}", ex.getMessage());
         }
 
-        return mapActiveLoans;
+        return activeLoanTypes;
     }
 
     @Override
@@ -148,7 +152,8 @@ public class PoloniexLendingService implements LendingService
             offers = mapper.mapOpenLoanOffers(currency, res);
             LOG.trace("Retrieved and mapped {} {} OpenLoanOffers in {} ms", currency, offers.size(), System.currentTimeMillis() - start);
             return offers;
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             LOG.error("Retrieved and mapped {} {} OpenLoanOffers - {}", currency, offers.size(), ex.getMessage());
         }
@@ -166,7 +171,8 @@ public class PoloniexLendingService implements LendingService
             String res = tradingClient.toggleAutoRenew(orderNumber);
             result = mapper.mapLendingResult(res);
             LogManager.getLogger(PoloniexLendingService.class).trace("Executed and mapped toggleAutoRenew for {} in {} ms", orderNumber, System.currentTimeMillis() - start);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             LogManager.getLogger(PoloniexLendingService.class).error("Error executing toggleAutoRenew for {} - {}", orderNumber, ex.getMessage());
         }

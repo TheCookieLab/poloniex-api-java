@@ -134,8 +134,8 @@ boolean success = service.moveOrder(orderNumber);
 String apiKey = "foo";
 String apiSecret = "bar";
 PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
-Map<String, List<PoloniexActiveLoan>> loans = service.returnActiveLoans();
-List<PoloniexActiveLoan> list = loans.get(LendingService.PROVIDED_LOAD_TYPE);
+PoloniexActiveLoanTypes activeLoans = service.returnActiveLoans();
+
 ```
 ### Create a loan offer  
 ```java
