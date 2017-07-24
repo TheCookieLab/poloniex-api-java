@@ -118,25 +118,43 @@ public class PoloniexDataMapperTest
         assertEquals("buy", orderResult.resultingTrades.get(0).type);
         assertNull(orderResult.error);
     }
-    
+
     @Test
-    public void mapFailedBuyTradeOrderWithError() {
+    public void mapFailedBuyTradeOrderWithError()
+    {
         String data = "{\"error\":\"Unable to fill order completely.\"}";
         PoloniexOrderResult orderResult = mapper.mapTradeOrder(data);
         assertNull(orderResult.orderNumber);
         assertNull(orderResult.resultingTrades);
-        assertNotNull(orderResult.error);               
+        assertNotNull(orderResult.error);
     }
-    
+
     @Test
-    public void mapEmptyOpenOrders() {
+    public void mapEmptyOpenOrders()
+    {
         String data = "[]";
         List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
         assertTrue(openOrders.isEmpty());
     }
-    
+
     @Test
-    public void mapOpenOrders() {
+    public void mapSingleOpenOrder()
+    {
+        String openOrderResults = "[{\"orderNumber\":\"117741833082\",\"type\":\"sell\",\"rate\":\"277.79999987\",\"startingAmount\":\"0.73815000\",\"amount\":\"0.73815000\",\"total\":\"205.05806990\",\"date\":\"2017-07-04 14:24:22\",\"margin\":0}]";
+        List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(openOrderResults);
+        assertEquals(1, openOrders.size());
+
+        PoloniexOpenOrder openOrder = openOrders.get(0);
+        assertEquals(new BigDecimal("0.73815000"), openOrder.amount);
+        assertEquals("117741833082", openOrder.orderNumber);
+        assertEquals(new BigDecimal("277.79999987"), openOrder.rate);
+        assertEquals(new BigDecimal("205.05806990"), openOrder.total);
+        assertEquals("sell", openOrder.type);
+    }
+
+    @Test
+    public void mapMultipleOpenOrders()
+    {
         String data = "[{\"orderNumber\":\"120466\",\"type\":\"sell\",\"rate\":\"0.025\",\"amount\":\"100\",\"total\":\"2.5\"},{\"orderNumber\":\"120467\",\"type\":\"sell\",\"rate\":\"0.04\",\"amount\":\"100\",\"total\":\"4\"}]";
         List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
         assertEquals(2, openOrders.size());
