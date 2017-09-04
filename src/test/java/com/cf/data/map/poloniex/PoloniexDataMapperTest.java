@@ -199,7 +199,7 @@ public class PoloniexDataMapperTest
                 + "	}]";
 
         List<PoloniexTradeHistory> tradeHistory = mapper.mapTradeHistory(data);
-        assertTrue(tradeHistory.size() == 3);
+        assertEquals(3, tradeHistory.size());
 
         PoloniexTradeHistory first = tradeHistory.get(0);
         assertEquals(84912521L, first.globalTradeID.longValue());
