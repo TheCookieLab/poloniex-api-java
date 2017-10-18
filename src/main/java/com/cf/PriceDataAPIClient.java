@@ -1,5 +1,7 @@
 package com.cf;
 
+import com.cf.client.poloniex.enums.CurrencyPairEnum;
+
 /**
  *
  * @author David
@@ -12,7 +14,7 @@ public interface PriceDataAPIClient
 
     public String getUSDETHChartData(Long periodInSeconds, Long startEpochInSeconds);
 
-    public String getChartData(String currencyPair, Long periodInSeconds, Long startEpochSeconds);
+    public String getChartData(CurrencyPairEnum currencyPair, Long periodInSeconds, Long startEpochSeconds);
 
-    public String getChartData(String currencyPair, Long periodInSeconds, Long startEpochSeconds, Long endEpochSeconds);
+    public String getChartData(CurrencyPairEnum currencyPair, Long periodInSeconds, Long startEpochSeconds, Long endEpochSeconds);
 }

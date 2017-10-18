@@ -6,7 +6,7 @@ Using this client is as simple as instantiating a new PoloniexExchangeService wi
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 ```
 
 Passing in null (or invalid values) for either the API Key or API Secret will prevent you from successfully calling the Poloniex Trading API methods (trading, retrieving private info related to your account, etc), but public API methods will still work. 
@@ -19,15 +19,15 @@ The PoloniexExchangeService offers the following functionality:
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
-PoloniexTicker btcTicker = service.returnTicker("USDT_BTC");
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
+PoloniexTicker btcTicker = service.returnTicker(CurrencyPairEnum.USDT_BTC);
 ```
 
 ### Return all market pairs
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 List<String> marketsList = service.returnAllMarkets();
 ```
 
@@ -35,11 +35,10 @@ List<String> marketsList = service.returnAllMarkets();
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
-List<PoloniexChartData> btcDailyChartDataStartingFromYesterday = 
-  service.returnChartData("USDT_BTC", 
-                        86400L, 
-                        ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toEpochSecond());
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
+List<PoloniexChartData> btcDailyChartDataStartingFromYesterday = service.returnChartData(CurrencyPairEnum.USDT_BTC, 
+						                        ExchangeService.DAILY_TIME_PERIOD, 
+						                        ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toEpochSecond());
 ```
 
 ## Trading API Methods (Requires Poloniex account and API access enabled)  
@@ -48,15 +47,15 @@ List<PoloniexChartData> btcDailyChartDataStartingFromYesterday =
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
-PoloniexCompleteBalance btcBalance = service.returnBalance("BTC");
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
+PoloniexCompleteBalance btcBalance = service.returnBalance(CurrencyEnum.BTC);
 ```
 
 ### Return fee info/schedule
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 PoloniexFeeInfo feeInfo = service.returnFeeInfo();
 ```
 
@@ -64,55 +63,53 @@ PoloniexFeeInfo feeInfo = service.returnFeeInfo();
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
-List<PoloniexOpenOrder> UsdtBtcOpenOrders = service.returnOpenOrders("USDT_BTC");
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
+List<PoloniexOpenOrder> UsdtBtcOpenOrders = service.returnOpenOrders(CurrencyPairEnum.USDT_BTC);
 ```
 
 ### Return trade history
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
-List<PoloniexTradeHistory> UsdtBtcTradeHistory = service.returnTradeHistory("USDT_BTC");
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
+List<PoloniexTradeHistory> UsdtBtcTradeHistory = service.returnTradeHistory(CurrencyPairEnum.USDT_BTC);
 ```
 
 ### Buy
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 
-String currencyPair = "USDT_BTC";
 BigDecimal buyPrice = BigDecimal.valueOf("1980");
 BigDecimal amount = BigDecimal.ONE;
 boolean fillOrKill = false;
 boolean immediateOrCancel = false;
 boolean postOnly = false;
 PoloniexOrderResult buyOrderResult = 
-      service.buy(currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
+      service.buy(CurrencyPairEnum.USDT_BTC, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
 ```
 
 ### Sell
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 
-String currencyPair = "USDT_BTC";
 BigDecimal sellPrice = BigDecimal.valueOf("1980");
 BigDecimal amount = BigDecimal.ONE;
 boolean fillOrKill = false;
 boolean immediateOrCancel = false;
 boolean postOnly = false;
 PoloniexOrderResult buyOrderResult = 
-      service.sell(currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
+      service.sell(CurrencyPairEnum.USDT_BTC, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
 ```
 
 ### Cancel order  
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 
 String orderNumber = "123456789";
 boolean success = service.cancelOrder(orderNumber);
@@ -122,7 +119,7 @@ boolean success = service.cancelOrder(orderNumber);
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 
 String orderNumber = "123456789";
 boolean success = service.moveOrder(orderNumber);
@@ -146,14 +143,14 @@ PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
 BigDecimal amount = new BigDecimal("0.01"); 
 BigDecimal lendingRate = new BigDecimal("0.0042"); // 0.42%
 int duration = 3; // 2 ~ 60
-PoloniexLendingResult result = service.createLoanOffer("BTC", amount, lendingRate, duration, true);
+PoloniexLendingResult result = service.createLoanOffer(CurrencyEnum.BTC, amount, lendingRate, duration, true);
 ```
 ### Return open loan offers  
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
 PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
-List<PoloniexLoanOffer> list = service.returnOpenLoanOffers("BTC");
+List<PoloniexLoanOffer> list = service.returnOpenLoanOffers(CurrencyEnum.BTC);
 ```
 
 ### Create loan offer  
@@ -165,7 +162,7 @@ PoloniexLendingService service = new PoloniexLendingService(apiKey, apiSecret);
 BigDecimal amount = new BigDecimal("0.01"); 
 BigDecimal lendingRate = new BigDecimal("0.0042"); // 0.42%
 int duration = 3; // 2 ~ 60
-PoloniexLendingResult result = service.createLoanOffer("BTC", amount, lendingRate, duration, true);
+PoloniexLendingResult result = service.createLoanOffer(CurrencyEnum.BTC, amount, lendingRate, duration, true);
 ```
 ### Cancel loan offer  
 ```java
@@ -210,7 +207,7 @@ The following example sets up subscriptions to the general ticker as well as the
 ```java
 try (WSSClient poloniexWSSClient = new WSSClient("wss://api.poloniex.com", "realm1")) {
     poloniexWSSClient.subscribe(PoloniexSubscription.TICKER);
-    poloniexWSSClient.subscribe(new PoloniexSubscription("USDT_BTC"));
+    poloniexWSSClient.subscribe(new PoloniexSubscription(CurrencyPairEnum.USDT_BTC.name()));
     poloniexWSSClient.run(60000);
 }
 ```

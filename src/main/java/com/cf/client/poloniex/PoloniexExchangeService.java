@@ -3,8 +3,9 @@ package com.cf.client.poloniex;
 import com.cf.ExchangeService;
 import com.cf.PriceDataAPIClient;
 import com.cf.TradingAPIClient;
+import com.cf.client.poloniex.enums.CurrencyEnum;
+import com.cf.client.poloniex.enums.CurrencyPairEnum;
 import com.cf.data.map.poloniex.PoloniexDataMapper;
-import com.cf.data.model.poloniex.PoloniexLoan;
 import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
 import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexCompleteBalance;
@@ -49,13 +50,13 @@ public class PoloniexExchangeService implements ExchangeService
      * *
      * Returns candlestick chart data for the given currency pair
      *
-     * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
+     * @param currencyPair Examples: CurrencyPairEnum.USDT_ETH, CurrencyPairEnum.USDT_BTC, CurrencyPairEnum.BTC_ETH
      * @param periodInSeconds The candlestick chart data period. Valid values are 300 (5 min), 900 (15 minutes), 7200 (2 hours), 14400 (4 hours), 86400 (daily)
      * @param startEpochInSeconds UNIX timestamp format and used to specify the start date of the data returned
      * @return List of PoloniexChartData
      */
     @Override
-    public List<PoloniexChartData> returnChartData(String currencyPair, Long periodInSeconds, Long startEpochInSeconds)
+    public List<PoloniexChartData> returnChartData(CurrencyPairEnum currencyPair, Long periodInSeconds, Long startEpochInSeconds)
     {
         long start = System.currentTimeMillis();
         List<PoloniexChartData> chartData = new ArrayList<PoloniexChartData>();
@@ -77,18 +78,18 @@ public class PoloniexExchangeService implements ExchangeService
      * *
      * Returns the ticker for all a given currency pair
      *
-     * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
+     * @param currencyPair Examples: CurrencyPairEnum.USDT_ETH, CurrencyPairEnum.USDT_BTC, CurrencyPairEnum.BTC_ETH
      * @return PoloniexTicker
      */
     @Override
-    public PoloniexTicker returnTicker(String currencyPair)
+    public PoloniexTicker returnTicker(CurrencyPairEnum currencyPair)
     {
         long start = System.currentTimeMillis();
         PoloniexTicker tickerResult = null;
         try
         {
             String tickerData = publicClient.returnTicker();
-            tickerResult = mapper.mapTickerForCurrency(currencyPair, tickerData);
+            tickerResult = mapper.mapTickerForCurrency(currencyPair.name(), tickerData);
             LOG.trace("Retrieved and mapped {} ticker in {} ms", currencyPair, System.currentTimeMillis() - start);
         }
         catch (Exception ex)
@@ -122,18 +123,18 @@ public class PoloniexExchangeService implements ExchangeService
      * *
      * Returns the balance for specified currency type
      *
-     * @param currencyType Examples: BTC, ETH, DASH
+     * @param currencyType Examples: CurrencyEnum.BTC, CurrencyEnum.ETH, CurrencyEnum.DASH
      * @return PoloniexCompleteBalance
      */
     @Override
-    public PoloniexCompleteBalance returnBalance(String currencyType)
+    public PoloniexCompleteBalance returnBalance(CurrencyEnum currencyType)
     {
         long start = System.currentTimeMillis();
         PoloniexCompleteBalance balance = null;
         try
         {
             String completeBalancesResult = tradingClient.returnCompleteBalances();
-            balance = mapper.mapCompleteBalanceResultForCurrency(currencyType, completeBalancesResult);
+            balance = mapper.mapCompleteBalanceResultForCurrency(currencyType.name(), completeBalancesResult);
             LOG.trace("Retrieved and mapped {} complete balance in {} ms", currencyType, System.currentTimeMillis() - start);
         }
         catch (Exception ex)
@@ -198,11 +199,11 @@ public class PoloniexExchangeService implements ExchangeService
      * *
      * Returns your open orders for a given currency pair
      *
-     * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
+     * @param currencyPair Examples: CurrencyPairEnum.USDT_ETH, CurrencyPairEnum.USDT_BTC, CurrencyPairEnum.BTC_ETH
      * @return List of PoloniexOpenOrder
      */
     @Override
-    public List<PoloniexOpenOrder> returnOpenOrders(String currencyPair)
+    public List<PoloniexOpenOrder> returnOpenOrders(CurrencyPairEnum currencyPair)
     {
         long start = System.currentTimeMillis();
         List<PoloniexOpenOrder> openOrders = new ArrayList<PoloniexOpenOrder>();
@@ -225,11 +226,11 @@ public class PoloniexExchangeService implements ExchangeService
      * *
      * Returns up to 50,000 trades for given currency pair
      *
-     * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
+     * @param currencyPair Examples: CurrencyPairEnum.USDT_ETH, CurrencyPairEnum.USDT_BTC, CurrencyPairEnum.BTC_ETH
      * @return List of PoloniexTradeHistory
      */
     @Override
-    public List<PoloniexTradeHistory> returnTradeHistory(String currencyPair)
+    public List<PoloniexTradeHistory> returnTradeHistory(CurrencyPairEnum currencyPair)
     {
         long start = System.currentTimeMillis();
         List<PoloniexTradeHistory> tradeHistory = new ArrayList<PoloniexTradeHistory>();
@@ -252,7 +253,7 @@ public class PoloniexExchangeService implements ExchangeService
      * *
      * Places a sell order in a given market
      *
-     * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
+     * @param currencyPair Examples: CurrencyPairEnum.USDT_ETH, CurrencyPairEnum.USDT_BTC, CurrencyPairEnum.BTC_ETH
      * @param sellPrice
      * @param amount
      * @param fillOrKill Will either fill in its entirety or be completely aborted
@@ -261,7 +262,7 @@ public class PoloniexExchangeService implements ExchangeService
      * @return PoloniexOrderResult
      */
     @Override
-    public PoloniexOrderResult sell(String currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
+    public PoloniexOrderResult sell(CurrencyPairEnum currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {
         long start = System.currentTimeMillis();
         PoloniexOrderResult orderResult = null;
@@ -283,7 +284,7 @@ public class PoloniexExchangeService implements ExchangeService
      * *
      * Places a buy order in a given market
      *
-     * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
+     * @param currencyPair Examples: CurrencyPairEnum.USDT_ETH, CurrencyPairEnum.USDT_BTC, CurrencyPairEnum.BTC_ETH
      * @param buyPrice
      * @param amount
      * @param fillOrKill Will either fill in its entirety or be completely aborted
@@ -292,7 +293,7 @@ public class PoloniexExchangeService implements ExchangeService
      * @return PoloniexOrderResult
      */
     @Override
-    public PoloniexOrderResult buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
+    public PoloniexOrderResult buy(CurrencyPairEnum currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {
         long start = System.currentTimeMillis();
         PoloniexOrderResult orderResult = null;
