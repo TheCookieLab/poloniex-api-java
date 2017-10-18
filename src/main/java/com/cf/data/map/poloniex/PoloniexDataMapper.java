@@ -133,7 +133,7 @@ public class PoloniexDataMapper
     {
         // Trading API returns '[]' instead of '{}' when no offer exists.
         if ("[]".equals(results)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Map<String,List<PoloniexLoanOffer>> offers = gson.fromJson(results, new TypeToken<Map<String,List<PoloniexLoanOffer>>>()
         {

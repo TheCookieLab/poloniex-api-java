@@ -1,9 +1,12 @@
 package com.cf;
 
-import com.cf.data.model.poloniex.*;
-
 import java.math.BigDecimal;
 import java.util.List;
+
+import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
+import com.cf.data.model.poloniex.PoloniexLendingHistory;
+import com.cf.data.model.poloniex.PoloniexLendingResult;
+import com.cf.data.model.poloniex.PoloniexLoanOffer;
 
 /**
  *
@@ -11,8 +14,6 @@ import java.util.List;
  */
 public interface LendingService
 {
-    public final static String BTC_CURRENCY_TYPE = "BTC";
-
     public PoloniexActiveLoanTypes returnActiveLoans();
 
     public List<PoloniexLendingHistory> returnLendingHistory(int hours, int limit);

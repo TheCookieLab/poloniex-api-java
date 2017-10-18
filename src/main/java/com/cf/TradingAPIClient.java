@@ -2,6 +2,8 @@ package com.cf;
 
 import java.math.BigDecimal;
 
+import com.cf.client.poloniex.enums.CurrencyPairEnum;
+
 /**
  *
  * @author David
@@ -14,17 +16,17 @@ public interface TradingAPIClient
 
     public String returnFeeInfo();
 
-    public String returnOpenOrders(String currencyPair);
+    public String returnOpenOrders(CurrencyPairEnum currencyPair);
 
-    public String returnTradeHistory(String currencyPair);
+    public String returnTradeHistory(CurrencyPairEnum currencyPair);
 
     public String cancelOrder(String orderNumber);
 
     public String moveOrder(String orderNumber, BigDecimal rate);
 
-    public String sell(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly);
+    public String sell(CurrencyPairEnum currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly);
 
-    public String buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly);
+    public String buy(CurrencyPairEnum currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly);
 
     // Lending APIs
     public String returnActiveLoans();

@@ -3,6 +3,8 @@ package com.cf.client.poloniex;
 
 import com.cf.TradingAPIClient;
 import com.cf.client.HTTPClient;
+import com.cf.client.poloniex.enums.CurrencyPairEnum;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -67,18 +69,18 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
 
 
     @Override
-    public String returnOpenOrders(String currencyPair)
+    public String returnOpenOrders(CurrencyPairEnum currencyPair)
     {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
-        additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair));
+        additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair.name()));
         return returnTradingAPICommandResults("returnOpenOrders", additionalPostParams);
     }
 
     @Override
-    public String returnTradeHistory(String currencyPair)
+    public String returnTradeHistory(CurrencyPairEnum currencyPair)
     {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
-        additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair == null ? "all" : currencyPair));
+        additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair == null ? "all" : currencyPair.name()));
         additionalPostParams.add(new BasicNameValuePair("start", PoloniexExchangeService.LONG_LONG_AGO.toString()));
         return returnTradingAPICommandResults("returnTradeHistory", additionalPostParams);
     }
@@ -103,13 +105,13 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
     }
 
     @Override
-    public String sell(String currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
+    public String sell(CurrencyPairEnum currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {
         return trade("sell", currencyPair, sellPrice, amount, fillOrKill, immediateOrCancel, postOnly);
     }
 
     @Override
-    public String buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
+    public String buy(CurrencyPairEnum currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {
         return trade("buy", currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
     }
@@ -170,10 +172,10 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
         return returnTradingAPICommandResults("toggleAutoRenew", additionalPostParams);
     }
 
-    private String trade(String tradeType, String currencyPair, BigDecimal rate, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
+    private String trade(String tradeType, CurrencyPairEnum currencyPair, BigDecimal rate, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
     {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
-        additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair));
+        additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair.name()));
         additionalPostParams.add(new BasicNameValuePair("rate", rate.toPlainString()));
         additionalPostParams.add(new BasicNameValuePair("amount", amount.toPlainString()));
         additionalPostParams.add(new BasicNameValuePair("fillOrKill", fillOrKill ? "1" : "0"));
