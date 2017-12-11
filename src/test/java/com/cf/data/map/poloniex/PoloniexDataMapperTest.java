@@ -1,10 +1,13 @@
 package com.cf.data.map.poloniex;
 
+import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexFeeInfo;
 import com.cf.data.model.poloniex.PoloniexOpenOrder;
 import com.cf.data.model.poloniex.PoloniexOrderResult;
 import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import java.math.BigDecimal;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -17,13 +20,50 @@ import org.junit.Test;
  *
  * @author David
  */
-public class PoloniexDataMapperTest
-{
+public class PoloniexDataMapperTest {
+
     private final PoloniexDataMapper mapper = new PoloniexDataMapper();
 
     @Test
-    public void mapCompleteBalanceResultForCurrencyReturnsCorrectBalanceResult()
-    {
+    public void mapValidPoloniexChartData() {
+        String results = "[{\"date\":1512777600,\"high\":487.0422141,\"low\":436.6987279,\"open\":441.81031703,\"close\":461.04968807,\"volume\":29389672.275876,\"quoteVolume\":63412.76665555,\"weightedAverage\":463.46617291},{\"date\":1512864000,\"high\":461.05014912,\"low\":412.0088,\"open\":461.05014912,\"close\":428.95845809,\"volume\":15297660.06622,\"quoteVolume\":35159.74815454,\"weightedAverage\":435.09014908},{\"date\":1512950400,\"high\":463.39998999,\"low\":428.95845926,\"open\":430,\"close\":461.83896992,\"volume\":8204186.3775461,\"quoteVolume\":18163.96559478,\"weightedAverage\":451.67374573}]";
+        List<PoloniexChartData> chartDataList = mapper.mapChartData(results);
+        assertEquals("There should be 3 chart data results", 3, chartDataList.size());
+
+        PoloniexChartData chartData = chartDataList.get(0);
+        assertEquals(ZonedDateTime.of(2017, 12, 9, 0, 0, 0, 0, ZoneOffset.UTC), chartData.date);
+        assertEquals("487.0422141", chartData.high.toString());
+        assertEquals("436.6987279", chartData.low.toString());
+        assertEquals("441.81031703", chartData.open.toString());
+        assertEquals("461.04968807", chartData.close.toString());
+        assertEquals("29389672.275876", chartData.volume.toString());
+        assertEquals("63412.76665555", chartData.quoteVolume.toString());
+        assertEquals("463.46617291", chartData.weightedAverage.toString());
+    }
+
+    @Test
+    public void mapPoloniexChartDataToTicksHandlesInvalidCurrencyPairChartDataResult() {
+        String results = "{\"error\":\"Invalid currency pair.\"}";
+        List<PoloniexChartData> chartDataList = mapper.mapChartData(results);
+        assertEquals("There should be 0 chart data results", 0, chartDataList.size());
+    }
+
+    @Test
+    public void mapPoloniexChartDataToTicksHandlesInvalidDateRangeChartDataResult() {
+        String results = "[{\"date\":0,\"high\":0,\"low\":0,\"open\":0,\"close\":0,\"volume\":0,\"quoteVolume\":0,\"weightedAverage\":0}]";
+        List<PoloniexChartData> chartDataList = mapper.mapChartData(results);
+        assertEquals("There should be 0 chart data results", 0, chartDataList.size());
+    }
+
+    @Test
+    public void mapPoloniexChartDataToTicksHandlesEmptyDateRangeChartDataResult() {
+        String results = "[]";
+        List<PoloniexChartData> chartDataList = mapper.mapChartData(results);
+        assertEquals("There should be 0 chart data results", 0, chartDataList.size());
+    }
+
+    @Test
+    public void mapCompleteBalanceResultForCurrencyReturnsCorrectBalanceResult() {
         String currencyType = "BTC";
         String completeBalanceResults = "{\n"
                 + "	\"YACC\" : {\n"
@@ -51,8 +91,7 @@ public class PoloniexDataMapperTest
     }
 
     @Test
-    public void mapCompleteBalanceResultReturnsNullForInvalidCurrencyType()
-    {
+    public void mapCompleteBalanceResultReturnsNullForInvalidCurrencyType() {
         String currencyType = "BTC";
         String completeBalanceResults = "{\n"
                 + "	\"YACC\" : {\n"
@@ -80,38 +119,34 @@ public class PoloniexDataMapperTest
     }
 
     @Test
-    public void mapPoloniexFeeInfo()
-    {
+    public void mapPoloniexFeeInfo() {
         String data = "{\"makerFee\":\"0.00150000\",\"takerFee\":\"0.00250000\",\"thirtyDayVolume\":\"3.30872191\",\"nextTier\":\"600.00000000\"}";
         PoloniexFeeInfo feeInfo = mapper.mapFeeInfo(data);
         assertNotNull(feeInfo);
     }
 
     @Test
-    public void mapCancelOrderSuccessReturnsTrue()
-    {
+    public void mapCancelOrderSuccessReturnsTrue() {
         String data = "{\"success\":1}";
         boolean result = mapper.mapCancelOrder(data);
         assertTrue(result);
     }
 
     @Test
-    public void mapCancelOrderFailureReturnsFalse()
-    {
+    public void mapCancelOrderFailureReturnsFalse() {
         String data = "{\"success\":0}";
         boolean result = mapper.mapCancelOrder(data);
         assertFalse(result);
     }
 
     @Test
-    public void mapBuyTradeOrder()
-    {
+    public void mapBuyTradeOrder() {
         String data = "{\"orderNumber\":31226040,\"resultingTrades\":[{\"amount\":\"338.8732\",\"date\":\"2014-10-18 23:03:21\",\"rate\":\"0.00000173\",\"total\":\"0.00058625\",\"tradeID\":\"16164\",\"type\":\"buy\"}]}";
         PoloniexOrderResult orderResult = mapper.mapTradeOrder(data);
         assertEquals(31226040L, orderResult.orderNumber.longValue());
         assertEquals(1, orderResult.resultingTrades.size());
         assertEquals(BigDecimal.valueOf(338.8732), orderResult.resultingTrades.get(0).amount);
-        assertEquals("2014-10-18T23:03:21", orderResult.resultingTrades.get(0).date.toString());
+        assertEquals("2014-10-18T23:03:21Z", orderResult.resultingTrades.get(0).date.toString());
         assertEquals(BigDecimal.valueOf(0.00000173), orderResult.resultingTrades.get(0).rate);
         assertEquals(BigDecimal.valueOf(0.00058625), orderResult.resultingTrades.get(0).total);
         assertEquals("16164", orderResult.resultingTrades.get(0).tradeID);
@@ -120,8 +155,7 @@ public class PoloniexDataMapperTest
     }
 
     @Test
-    public void mapFailedBuyTradeOrderWithError()
-    {
+    public void mapFailedBuyTradeOrderWithError() {
         String data = "{\"error\":\"Unable to fill order completely.\"}";
         PoloniexOrderResult orderResult = mapper.mapTradeOrder(data);
         assertNull(orderResult.orderNumber);
@@ -130,16 +164,14 @@ public class PoloniexDataMapperTest
     }
 
     @Test
-    public void mapEmptyOpenOrders()
-    {
+    public void mapEmptyOpenOrders() {
         String data = "[]";
         List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
         assertTrue(openOrders.isEmpty());
     }
 
     @Test
-    public void mapSingleOpenOrder()
-    {
+    public void mapSingleOpenOrder() {
         String openOrderResults = "[{\"orderNumber\":\"117741833082\",\"type\":\"sell\",\"rate\":\"277.79999987\",\"startingAmount\":\"0.73815000\",\"amount\":\"0.73815000\",\"total\":\"205.05806990\",\"date\":\"2017-07-04 14:24:22\",\"margin\":0}]";
         List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(openOrderResults);
         assertEquals(1, openOrders.size());
@@ -153,16 +185,14 @@ public class PoloniexDataMapperTest
     }
 
     @Test
-    public void mapMultipleOpenOrders()
-    {
+    public void mapMultipleOpenOrders() {
         String data = "[{\"orderNumber\":\"120466\",\"type\":\"sell\",\"rate\":\"0.025\",\"amount\":\"100\",\"total\":\"2.5\"},{\"orderNumber\":\"120467\",\"type\":\"sell\",\"rate\":\"0.04\",\"amount\":\"100\",\"total\":\"4\"}]";
         List<PoloniexOpenOrder> openOrders = mapper.mapOpenOrders(data);
         assertEquals(2, openOrders.size());
     }
 
     @Test
-    public void mapTradeHistory()
-    {
+    public void mapTradeHistory() {
         String data = "[{\n"
                 + "		\"globalTradeID\": 84912521,\n"
                 + "		\"tradeID\": \"1640236\",\n"
@@ -204,7 +234,7 @@ public class PoloniexDataMapperTest
         PoloniexTradeHistory first = tradeHistory.get(0);
         assertEquals(84912521L, first.globalTradeID.longValue());
         assertEquals("1640236", first.tradeID);
-        assertEquals("2017-03-06T18:49:34", first.date.toString());
+        assertEquals("2017-03-06T18:49:34Z", first.date.toString());
         assertEquals("1273.37202076", first.rate.toPlainString());
         assertEquals("0.00150000", first.fee.toPlainString());
         assertEquals("55510230325", first.orderNumber);

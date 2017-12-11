@@ -2,7 +2,7 @@ package com.cf.data.model.poloniex;
 
 import com.google.gson.Gson;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -12,7 +12,7 @@ public class PoloniexTradeHistory
 {
     public final Long globalTradeID;
     public final String tradeID;
-    public final LocalDateTime date;
+    public final ZonedDateTime date;
     public final BigDecimal rate;
     public final BigDecimal amount;
     public final BigDecimal total;
@@ -21,7 +21,7 @@ public class PoloniexTradeHistory
     public final String type;
     public final String category;
 
-    public PoloniexTradeHistory(Long globalTradeID, String tradeID, LocalDateTime date, BigDecimal rate, BigDecimal amount, BigDecimal total, BigDecimal fee, String orderNumber, String type, String category)
+    public PoloniexTradeHistory(Long globalTradeID, String tradeID, ZonedDateTime date, BigDecimal rate, BigDecimal amount, BigDecimal total, BigDecimal fee, String orderNumber, String type, String category)
     {
         this.globalTradeID = globalTradeID;
         this.tradeID = tradeID;
