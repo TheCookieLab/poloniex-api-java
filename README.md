@@ -6,7 +6,7 @@ Using this client is as simple as instantiating a new PoloniexExchangeService wi
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 ```
 
 Passing in null (or invalid values) for either the API Key or API Secret will prevent you from successfully calling the Poloniex Trading API methods (trading, retrieving private info related to your account, etc), but public API methods will still work. 
@@ -19,7 +19,7 @@ The PoloniexExchangeService offers the following functionality:
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 PoloniexTicker btcTicker = service.returnTicker("USDT_BTC");
 ```
 
@@ -27,7 +27,7 @@ PoloniexTicker btcTicker = service.returnTicker("USDT_BTC");
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 List<String> marketsList = service.returnAllMarkets();
 ```
 
@@ -35,7 +35,7 @@ List<String> marketsList = service.returnAllMarkets();
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 List<PoloniexChartData> btcDailyChartDataStartingFromYesterday = 
   service.returnChartData("USDT_BTC", 
                         86400L, 
@@ -48,7 +48,7 @@ List<PoloniexChartData> btcDailyChartDataStartingFromYesterday =
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 PoloniexCompleteBalance btcBalance = service.returnBalance("BTC");
 ```
 
@@ -56,7 +56,7 @@ PoloniexCompleteBalance btcBalance = service.returnBalance("BTC");
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 PoloniexFeeInfo feeInfo = service.returnFeeInfo();
 ```
 
@@ -64,7 +64,7 @@ PoloniexFeeInfo feeInfo = service.returnFeeInfo();
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 List<PoloniexOpenOrder> UsdtBtcOpenOrders = service.returnOpenOrders("USDT_BTC");
 ```
 
@@ -72,7 +72,7 @@ List<PoloniexOpenOrder> UsdtBtcOpenOrders = service.returnOpenOrders("USDT_BTC")
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 List<PoloniexTradeHistory> UsdtBtcTradeHistory = service.returnTradeHistory("USDT_BTC");
 ```
 
@@ -80,7 +80,7 @@ List<PoloniexTradeHistory> UsdtBtcTradeHistory = service.returnTradeHistory("USD
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 
 String currencyPair = "USDT_BTC";
 BigDecimal buyPrice = BigDecimal.valueOf("1980");
@@ -96,7 +96,7 @@ PoloniexOrderResult buyOrderResult =
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 
 String currencyPair = "USDT_BTC";
 BigDecimal sellPrice = BigDecimal.valueOf("1980");
@@ -112,7 +112,7 @@ PoloniexOrderResult buyOrderResult =
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 
 String orderNumber = "123456789";
 boolean success = service.cancelOrder(orderNumber);
@@ -122,7 +122,7 @@ boolean success = service.cancelOrder(orderNumber);
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";
-PoloniexExchangeService service = new PoloniexExchangeService(foo, bar);
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
 
 String orderNumber = "123456789";
 boolean success = service.moveOrder(orderNumber);
