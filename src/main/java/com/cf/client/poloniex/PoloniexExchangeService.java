@@ -16,6 +16,8 @@ import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -120,13 +122,44 @@ public class PoloniexExchangeService implements ExchangeService
 
     /**
      * *
+     * Returns the complete balances inclusive non-zero balances or not depending on parameter includeZeroBalances
+     * @param includeZeroBalances The includeZeroBalances
+     * @return Map<String, PoloniexCompleteBalance>
+     */
+    @Override
+    public Map<String, PoloniexCompleteBalance> returnBalance(boolean includeZeroBalances)
+    {
+        long start = System.currentTimeMillis();
+        Map<String, PoloniexCompleteBalance> balance = null;
+        try
+        {
+            String completeBalancesResult = tradingClient.returnCompleteBalances();
+            if (includeZeroBalances) {
+                balance = mapper.mapCompleteBalanceResult(completeBalancesResult);
+            } else {
+                balance = mapper.mapCompleteBalanceResultForNonZeroCurrencies(completeBalancesResult);
+                LOG.trace("Retrieved and mapped complete balance in {} ms", System.currentTimeMillis() - start);
+            }
+            balance = mapper.mapCompleteBalanceResult(completeBalancesResult);
+
+        }
+        catch (Exception ex)
+        {
+            LOG.error("Error retrieving complete balance - {}", ex.getMessage());
+        }
+
+        return balance;
+    }
+
+    /**
+     * *
      * Returns the balance for specified currency type
      *
      * @param currencyType Examples: BTC, ETH, DASH
      * @return PoloniexCompleteBalance
      */
     @Override
-    public PoloniexCompleteBalance returnBalance(String currencyType)
+    public PoloniexCompleteBalance returnCurrencyBalance(String currencyType)
     {
         long start = System.currentTimeMillis();
         PoloniexCompleteBalance balance = null;
