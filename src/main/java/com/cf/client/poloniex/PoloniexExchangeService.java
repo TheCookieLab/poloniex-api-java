@@ -136,12 +136,11 @@ public class PoloniexExchangeService implements ExchangeService
             String completeBalancesResult = tradingClient.returnCompleteBalances();
             if (includeZeroBalances) {
                 balance = mapper.mapCompleteBalanceResult(completeBalancesResult);
+                LOG.trace("Retrieved and mapped complete balance in {} ms", System.currentTimeMillis() - start);
             } else {
                 balance = mapper.mapCompleteBalanceResultForNonZeroCurrencies(completeBalancesResult);
-                LOG.trace("Retrieved and mapped complete balance in {} ms", System.currentTimeMillis() - start);
+                LOG.trace("Retrieved and mapped non-zero balances in {} ms", System.currentTimeMillis() - start);
             }
-            balance = mapper.mapCompleteBalanceResult(completeBalancesResult);
-
         }
         catch (Exception ex)
         {
