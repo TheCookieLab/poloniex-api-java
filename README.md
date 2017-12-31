@@ -44,7 +44,23 @@ List<PoloniexChartData> btcDailyChartDataStartingFromYesterday =
 
 ## Trading API Methods (Requires Poloniex account and API access enabled)  
 
-### Return balance
+### Return complete balances
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
+PoloniexCompleteBalance balances = service.returnBalances(includeZeroBalances = true);
+```
+
+### Return non-zero balances
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
+PoloniexCompleteBalance balances = service.returnBalances();
+```
+
+### Return balance filtered by currency
 ```java
 String apiKey = "foo";
 String apiSecret = "bar";

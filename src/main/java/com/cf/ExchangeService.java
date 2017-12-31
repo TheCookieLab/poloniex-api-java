@@ -12,6 +12,7 @@ import com.cf.data.model.poloniex.PoloniexTicker;
 import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -33,10 +34,12 @@ public interface ExchangeService
     public List<PoloniexChartData> returnChartData(String currencyPair, Long periodInSeconds, Long startEpochInSeconds);
     
     public PoloniexTicker returnTicker(String currencyName);
-    
+
     public List<String> returnAllMarkets();
 
-    public PoloniexCompleteBalance returnBalance(String currencyName);
+    public Map<String, PoloniexCompleteBalance> returnBalance(boolean includeZeroBalances);
+
+    public PoloniexCompleteBalance returnCurrencyBalance(String currencyName);
 
     public PoloniexFeeInfo returnFeeInfo();
     

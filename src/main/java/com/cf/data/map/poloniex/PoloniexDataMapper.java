@@ -22,11 +22,14 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 
 /**
@@ -95,10 +98,20 @@ public class PoloniexDataMapper {
         return new ArrayList<>(tickerResults.keySet());
     }
 
-    public PoloniexCompleteBalance mapCompleteBalanceResultForCurrency(String currencyType, String completeBalanceResults) {
-        Map<String, PoloniexCompleteBalance> balanceResults = gson.fromJson(completeBalanceResults, new TypeToken<Map<String, PoloniexCompleteBalance>>() {
+    public Map<String, PoloniexCompleteBalance> mapCompleteBalanceResult(String completeBalanceResults) {
+        return gson.fromJson(completeBalanceResults, new TypeToken<Map<String, PoloniexCompleteBalance>>() {
         }.getType());
-        return balanceResults.get(currencyType);
+    }
+
+    public Map<String, PoloniexCompleteBalance> mapCompleteBalanceResultForNonZeroCurrencies(String completeBalanceResults) {
+        return mapCompleteBalanceResult(completeBalanceResults).entrySet()
+                .stream()
+                .filter(balance -> balance.getValue().btcValue.compareTo(BigDecimal.ZERO) != 0)
+                .collect(Collectors.toMap(balance -> balance.getKey(), balance -> balance.getValue()));
+    }
+
+    public PoloniexCompleteBalance mapCompleteBalanceResultForCurrency(String currencyType, String completeBalanceResults) {
+        return mapCompleteBalanceResult(completeBalanceResults).get(currencyType);
     }
 
     public List<PoloniexOpenOrder> mapOpenOrders(String openOrdersResults) {
