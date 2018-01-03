@@ -4,7 +4,6 @@ import com.cf.ExchangeService;
 import com.cf.PriceDataAPIClient;
 import com.cf.TradingAPIClient;
 import com.cf.data.map.poloniex.PoloniexDataMapper;
-import com.cf.data.model.poloniex.PoloniexLoan;
 import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
 import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexCompleteBalance;
@@ -77,7 +76,33 @@ public class PoloniexExchangeService implements ExchangeService
 
     /**
      * *
-     * Returns the ticker for all a given currency pair
+     * Returns the ticker for all currency pairs
+     *
+     * @return ticker data mapped to pair
+     */
+    @Override
+    public Map<String, PoloniexTicker> returnTicker()
+    {
+        long start = System.currentTimeMillis();
+        Map<String, PoloniexTicker> tickerResult = null;
+        try
+        {
+            String tickerData = publicClient.returnTicker();
+            tickerResult = mapper.mapTicker(tickerData);
+            
+            LOG.trace("Retrieved and mapped ticker in {} ms", System.currentTimeMillis() - start);
+        }
+        catch (Exception ex)
+        {
+            LOG.error("Error retrieving ticker - {}", ex.getMessage());
+        }
+
+        return tickerResult;
+    }
+
+    /**
+     * *
+     * Returns the ticker for a given currency pair
      *
      * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
      * @return PoloniexTicker

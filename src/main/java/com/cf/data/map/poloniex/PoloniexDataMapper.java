@@ -86,16 +86,17 @@ public class PoloniexDataMapper {
         return activeLoanTypes;
     }
 
-    public PoloniexTicker mapTickerForCurrency(String currencyType, String tickerData) {
-        Map<String, PoloniexTicker> tickerResults = gson.fromJson(tickerData, new TypeToken<Map<String, PoloniexTicker>>() {
+    public Map<String, PoloniexTicker> mapTicker(String tickerData) {
+        return gson.fromJson(tickerData, new TypeToken<Map<String, PoloniexTicker>>() {
         }.getType());
-        return tickerResults.get(currencyType);
+    }
+    
+    public PoloniexTicker mapTickerForCurrency(String currencyType, String tickerData) {
+        return mapTicker(tickerData).get(currencyType);
     }
 
     public List<String> mapMarkets(String tickerData) {
-        Map<String, PoloniexTicker> tickerResults = gson.fromJson(tickerData, new TypeToken<Map<String, PoloniexTicker>>() {
-        }.getType());
-        return new ArrayList<>(tickerResults.keySet());
+        return new ArrayList<>(mapTicker(tickerData).keySet());
     }
 
     public Map<String, PoloniexCompleteBalance> mapCompleteBalanceResult(String completeBalanceResults) {

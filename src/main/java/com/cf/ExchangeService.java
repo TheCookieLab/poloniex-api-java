@@ -1,7 +1,6 @@
 package com.cf;
 
 
-import com.cf.data.model.poloniex.PoloniexLoan;
 import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
 import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexCompleteBalance;
@@ -33,6 +32,8 @@ public interface ExchangeService
     
     public List<PoloniexChartData> returnChartData(String currencyPair, Long periodInSeconds, Long startEpochInSeconds);
     
+    public Map<String, PoloniexTicker> returnTicker();
+
     public PoloniexTicker returnTicker(String currencyName);
 
     public List<String> returnAllMarkets();
