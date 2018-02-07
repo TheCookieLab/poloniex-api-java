@@ -43,11 +43,12 @@ public class GetDailyBTCChartDataExample
         {
             LOG.warn("Did not find value for " + POLONIEX_API_SECRET_PROP_NAME + " in " + propertiesFileName + ". Trading API commands will fail");
         }
-
+        
         PoloniexExchangeService service = new PoloniexExchangeService(tradingAPIKey, tradingAPISecret);
         Long yesterdayEpochSecond = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toEpochSecond();
         List<PoloniexChartData> btcDailyChartData = service.returnChartData(PoloniexExchangeService.USDT_BTC_CURRENCY_PAIR, PoloniexExchangeService.DAILY_TIME_PERIOD, yesterdayEpochSecond);
         LOG.info(btcDailyChartData);
+        LOG.info(service.returnTicker());
     }
 
     private Properties loadProperties(String propertiesFileName)

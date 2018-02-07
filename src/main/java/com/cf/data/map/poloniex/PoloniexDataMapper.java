@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -39,7 +40,9 @@ import org.apache.logging.log4j.LogManager;
 public class PoloniexDataMapper {
 
     private final Gson gson;
-    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
+
+    private final static Logger LOGGER = LogManager.getLogger();
+    private final static DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
     private final static String EMPTY_RESULTS = "[]";
     private final static String INVALID_CHART_DATA_DATE_RANGE_RESULT = "[{\"date\":0,\"high\":0,\"low\":0,\"open\":0,\"close\":0,\"volume\":0,\"quoteVolume\":0,\"weightedAverage\":0}]";
     private final static String INVALID_CHART_DATA_CURRENCY_PAIR_RESULT = "{\"error\":\"Invalid currency pair.\"}";
@@ -66,7 +69,7 @@ public class PoloniexDataMapper {
             PoloniexChartData[] chartDataResults = gson.fromJson(chartDataResult, PoloniexChartData[].class);
             results = Arrays.asList(chartDataResults);
         } catch (JsonSyntaxException | DateTimeParseException ex) {
-            LogManager.getLogger().error("Exception mapping chart data {} - {}", chartDataResult, ex.getMessage());
+            LOGGER.error("Exception mapping chart data {} - {}", chartDataResult, ex.getMessage());
             results = Collections.EMPTY_LIST;
         }
         return results;
@@ -74,13 +77,19 @@ public class PoloniexDataMapper {
     }
 
     public PoloniexFeeInfo mapFeeInfo(String feeInfoResult) {
-        PoloniexFeeInfo feeInfo = gson.fromJson(feeInfoResult, new TypeToken<PoloniexFeeInfo>() {
-        }.getType());
+        PoloniexFeeInfo feeInfo = null;
 
+        try {
+            feeInfo = gson.fromJson(feeInfoResult, new TypeToken<PoloniexFeeInfo>() {
+            }.getType());
+        } catch (Exception ex) {
+            LOGGER.error("Exception mapping fee info {} - {}", feeInfoResult, ex.getMessage());
+        }
         return feeInfo;
     }
 
     public PoloniexActiveLoanTypes mapActiveLoans(String activeLoansResult) {
+        
         PoloniexActiveLoanTypes activeLoanTypes = gson.fromJson(activeLoansResult, PoloniexActiveLoanTypes.class);
 
         return activeLoanTypes;
@@ -90,7 +99,7 @@ public class PoloniexDataMapper {
         return gson.fromJson(tickerData, new TypeToken<Map<String, PoloniexTicker>>() {
         }.getType());
     }
-    
+
     public PoloniexTicker mapTickerForCurrency(String currencyType, String tickerData) {
         return mapTicker(tickerData).get(currencyType);
     }

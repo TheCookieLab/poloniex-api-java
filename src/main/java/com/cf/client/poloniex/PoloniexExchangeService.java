@@ -130,7 +130,7 @@ public class PoloniexExchangeService implements ExchangeService
     public List<String> returnAllMarkets()
     {
         long start = System.currentTimeMillis();
-        List<String> allMarkets = new ArrayList<String>();
+        List<String> allMarkets = new ArrayList<>();
         try
         {
             String tickerData = publicClient.returnTicker();
