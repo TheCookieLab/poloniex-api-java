@@ -1,6 +1,8 @@
 package com.cf.example;
 
-import com.cf.client.PlainWSSClient;
+import com.cf.client.WSSClient;
+import com.cf.client.wss.subscription.Subscription;
+import com.cf.client.wss.handler.LoggingSubscriptionMessageHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,7 +12,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class PoloniexWSSClientExample
 {
-    private final static Logger LOG = LogManager.getLogger(PoloniexWSSClientExample.class);
+    private static final Logger LOG = LogManager.getLogger(PoloniexWSSClientExample.class);
     private static final String ENDPOINT_URL = "wss://api2.poloniex.com";
 
     public static void main(String[] args)
@@ -28,9 +30,10 @@ public class PoloniexWSSClientExample
 
     public void run() throws Exception
     {
-        try (PlainWSSClient plainWssClient = new PlainWSSClient(ENDPOINT_URL))
+        try (WSSClient wssClient = new WSSClient(ENDPOINT_URL))
         {
-            plainWssClient.run(60000);
+            wssClient.addSubscription(Subscription.USDT_ETH, new LoggingSubscriptionMessageHandler());
+            wssClient.run(60000);
         }
     }
 }
