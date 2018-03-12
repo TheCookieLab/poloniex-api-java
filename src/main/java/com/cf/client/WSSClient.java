@@ -1,12 +1,11 @@
 package com.cf.client;
 
-import com.cf.client.wss.subscription.Subscription;
-import com.cf.client.wss.handler.SubscriptionMessageHandler;
+import com.cf.client.poloniex.wss.model.PoloniexWSSSubscription;
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-import com.cf.client.wss.router.WebSocketClientRouter;
+import com.cf.client.poloniex.PoloniexWSSClientRouter;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -29,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import com.cf.client.wss.handler.IMessageHandler;
 
 /**
  *
@@ -43,7 +43,7 @@ public class WSSClient implements AutoCloseable {
     private final SslContext sslCtx;
     private final EventLoopGroup group;
 
-    private Map<Subscription, SubscriptionMessageHandler> subscriptions;
+    private Map<PoloniexWSSSubscription, IMessageHandler> subscriptions;
 
     public WSSClient(String url) throws Exception {
         uri = new URI(url);
@@ -64,7 +64,7 @@ public class WSSClient implements AutoCloseable {
      * @param subscription
      * @param subscriptionMessageHandler
      */
-    public void addSubscription(Subscription subscription, SubscriptionMessageHandler subscriptionMessageHandler) {
+    public void addSubscription(PoloniexWSSSubscription subscription, IMessageHandler subscriptionMessageHandler) {
         this.subscriptions.put(subscription, subscriptionMessageHandler);
     }
 
@@ -79,8 +79,8 @@ public class WSSClient implements AutoCloseable {
      */
     public void run(long runTimeInMillis) throws InterruptedException, IOException, URISyntaxException {
 
-        final WebSocketClientRouter router = new WebSocketClientRouter(uri, subscriptions.entrySet().stream()
-                .collect(Collectors.toMap((Map.Entry<Subscription, SubscriptionMessageHandler> e) -> Double.parseDouble(e.getKey().channel), Map.Entry::getValue)));
+        final PoloniexWSSClientRouter router = new PoloniexWSSClientRouter(uri, subscriptions.entrySet().stream()
+                .collect(Collectors.toMap((Map.Entry<PoloniexWSSSubscription, IMessageHandler> e) -> Double.parseDouble(e.getKey().channel), Map.Entry::getValue)));
 
         Bootstrap b = new Bootstrap();
         b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
@@ -96,7 +96,7 @@ public class WSSClient implements AutoCloseable {
         Channel ch = b.connect(uri.getHost(), 443).sync().channel();
         router.handshakeFuture().sync();
 
-        for (Entry<Subscription, SubscriptionMessageHandler> subscription : subscriptions.entrySet()) {
+        for (Entry<PoloniexWSSSubscription, IMessageHandler> subscription : subscriptions.entrySet()) {
             WebSocketFrame frame = new TextWebSocketFrame(subscription.getKey().toString());
             ch.writeAndFlush(frame);
         }

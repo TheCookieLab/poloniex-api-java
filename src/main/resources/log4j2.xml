@@ -11,9 +11,6 @@
         </Logger>
         <Logger name="org.apache" level="info" additivity="false">
             <AppenderRef ref="Console"/>
-            <Root level="error">
-                <AppenderRef ref="Console"/>
-            </Root>
         </Logger>
         <Root level="error">
             <AppenderRef ref="Console"/>

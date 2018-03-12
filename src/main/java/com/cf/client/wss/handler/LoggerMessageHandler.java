@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author David
  */
-public class LoggingSubscriptionMessageHandler implements SubscriptionMessageHandler {
+public class LoggerMessageHandler implements IMessageHandler {
 
     private final static Logger LOG = LogManager.getLogger();
 

@@ -1,8 +1,9 @@
 package com.cf.example;
 
 import com.cf.client.WSSClient;
-import com.cf.client.wss.subscription.Subscription;
-import com.cf.client.wss.handler.LoggingSubscriptionMessageHandler;
+import com.cf.client.poloniex.wss.model.PoloniexWSSSubscription;
+import com.cf.client.wss.handler.LoggerMessageHandler;
+import com.cf.client.wss.handler.TickerMessageHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,7 +33,8 @@ public class PoloniexWSSClientExample
     {
         try (WSSClient wssClient = new WSSClient(ENDPOINT_URL))
         {
-            wssClient.addSubscription(Subscription.USDT_ETH, new LoggingSubscriptionMessageHandler());
+            wssClient.addSubscription(PoloniexWSSSubscription.USDT_ETH, new LoggerMessageHandler());
+            wssClient.addSubscription(PoloniexWSSSubscription.TICKER, new TickerMessageHandler());
             wssClient.run(60000);
         }
     }

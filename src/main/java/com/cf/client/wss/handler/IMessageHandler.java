@@ -5,6 +5,6 @@ package com.cf.client.wss.handler;
  *
  * @author David
  */
-public interface SubscriptionMessageHandler {
+public interface IMessageHandler {
     public void handle(String message);
 }

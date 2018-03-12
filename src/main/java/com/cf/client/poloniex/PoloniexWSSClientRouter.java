@@ -1,7 +1,6 @@
-package com.cf.client.wss.router;
+package com.cf.client.poloniex;
 
-import com.cf.client.wss.handler.LoggingSubscriptionMessageHandler;
-import com.cf.client.wss.handler.SubscriptionMessageHandler;
+import com.cf.client.wss.handler.LoggerMessageHandler;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,8 +24,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import com.cf.client.wss.handler.IMessageHandler;
 
-public class WebSocketClientRouter extends SimpleChannelInboundHandler<Object> {
+public class PoloniexWSSClientRouter extends SimpleChannelInboundHandler<Object> {
 
     private final static Logger LOG = LogManager.getLogger();
     private static final int MAX_FRAME_LENGTH = 1262144;
@@ -35,18 +35,20 @@ public class WebSocketClientRouter extends SimpleChannelInboundHandler<Object> {
     private ChannelPromise handshakeFuture;    
     private boolean running;
     
-    private Map<Double, SubscriptionMessageHandler> subscriptions;
-    private final SubscriptionMessageHandler defaultSubscriptionMessageHandler;
+    private Map<Double, IMessageHandler> subscriptions;
+    private final IMessageHandler defaultSubscriptionMessageHandler;
+    private final Gson gson;
 
-    public WebSocketClientRouter(URI url, Map<Double, SubscriptionMessageHandler> subscriptions) throws URISyntaxException {
+    public PoloniexWSSClientRouter(URI url, Map<Double, IMessageHandler> subscriptions) throws URISyntaxException {
         this(WebSocketClientHandshakerFactory
                 .newHandshaker(url, WebSocketVersion.V13, null, true, new DefaultHttpHeaders(), MAX_FRAME_LENGTH), subscriptions);
     }
 
-    public WebSocketClientRouter(WebSocketClientHandshaker handshaker, Map<Double, SubscriptionMessageHandler> subscriptions) {
+    public PoloniexWSSClientRouter(WebSocketClientHandshaker handshaker, Map<Double, IMessageHandler> subscriptions) {
         this.handshaker = handshaker;
         this.subscriptions = subscriptions;
-        this.defaultSubscriptionMessageHandler = new LoggingSubscriptionMessageHandler();                
+        this.defaultSubscriptionMessageHandler = new LoggerMessageHandler();
+        this.gson = new Gson();
     }
 
     public ChannelFuture handshakeFuture() {
@@ -95,7 +97,7 @@ public class WebSocketClientRouter extends SimpleChannelInboundHandler<Object> {
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
             LOG.trace("WebSocket Client received message: " + textFrame.text());
-            List<Map> results = new Gson().fromJson(textFrame.text(), List.class);
+            List<Map> results = this.gson.fromJson(textFrame.text(), List.class);
             this.subscriptions.getOrDefault(results.get(0), this.defaultSubscriptionMessageHandler).handle(textFrame.text());
             
         } else if (frame instanceof CloseWebSocketFrame) {
