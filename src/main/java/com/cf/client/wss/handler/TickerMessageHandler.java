@@ -14,24 +14,22 @@ import org.apache.logging.log4j.Logger;
 public class TickerMessageHandler implements IMessageHandler {
 
     private final static Logger LOG = LogManager.getLogger();
-    private final Gson gson;
-
-    public TickerMessageHandler() {
-        this.gson = new Gson();
-    }
+    private final static Gson GSON = new Gson();
 
     @Override
     public void handle(String message) {
         LOG.trace(message);
         PoloniexWSSTicker ticker = this.mapMessageToPoloniexTicker(message);
         LOG.trace(ticker);
-        
+
     }
-    
+
     protected PoloniexWSSTicker mapMessageToPoloniexTicker(String message) {
-        List results = gson.fromJson(message, List.class);
-        if (results.size() < 3) return null;
-        
+        List results = GSON.fromJson(message, List.class);
+        if (results.size() < 3) {
+            return null;
+        }
+
         List olhc = (List) results.get(2);
         return new PoloniexWSSTicker.PoloniexWSSTickerBuilder()
                 .setCurrencyPair((Double) olhc.get(0))
