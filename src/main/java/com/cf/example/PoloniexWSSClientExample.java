@@ -1,7 +1,9 @@
 package com.cf.example;
 
 import com.cf.client.WSSClient;
-import com.cf.data.handler.poloniex.PoloniexSubscription;
+import com.cf.client.poloniex.wss.model.PoloniexWSSSubscription;
+import com.cf.client.wss.handler.LoggerMessageHandler;
+import com.cf.client.wss.handler.TickerMessageHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,15 +13,19 @@ import org.apache.logging.log4j.Logger;
  */
 public class PoloniexWSSClientExample
 {
-    private final static Logger LOG = LogManager.getLogger(PoloniexWSSClientExample.class);
-    private static final String ENDPOINT_URL = "wss://api.poloniex.com";
-    private static final String DEFAULT_REALM = "realm1";
+    private static final Logger LOG = LogManager.getLogger(PoloniexWSSClientExample.class);
+    private static final String ENDPOINT_URL = "wss://api2.poloniex.com";
 
     public static void main(String[] args)
     {
         try
         {
             new PoloniexWSSClientExample().run();
+        }
+        catch (InterruptedException ex)
+        {
+            LOG.info(ex.getMessage());
+            System.exit(0);
         }
         catch (Exception ex)
         {
@@ -30,10 +36,11 @@ public class PoloniexWSSClientExample
 
     public void run() throws Exception
     {
-        try (WSSClient poloniexWSSClient = new WSSClient(ENDPOINT_URL, DEFAULT_REALM))
+        try (WSSClient wssClient = new WSSClient(ENDPOINT_URL))
         {
-            poloniexWSSClient.subscribe(PoloniexSubscription.TICKER);
-            poloniexWSSClient.run(60000);
+            wssClient.addSubscription(PoloniexWSSSubscription.USDT_ETH, new LoggerMessageHandler());
+            wssClient.addSubscription(PoloniexWSSSubscription.TICKER, new TickerMessageHandler());
+            wssClient.run(10000);
         }
     }
 }

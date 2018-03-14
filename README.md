@@ -221,17 +221,18 @@ for (PoloniexLendingHistory h : lendingHistories)
 ## Websocket Interface
 
 Using Poloniex's websocket interface is also very simple. 
-The following example sets up subscriptions to the general ticker as well as the USDT_BTC order book / trades, and then runs for 60 seconds:
+The following example sets up subscriptions to the general ticker as well as the USDT_ETH order book / trades, and then runs for 60 seconds:
 
 ```java
-try (WSSClient poloniexWSSClient = new WSSClient("wss://api.poloniex.com", "realm1")) {
-    poloniexWSSClient.subscribe(PoloniexSubscription.TICKER);
-    poloniexWSSClient.subscribe(new PoloniexSubscription("USDT_BTC"));
-    poloniexWSSClient.run(60000);
-}
+try (WSSClient wssClient = new WSSClient(ENDPOINT_URL))
+        {
+            wssClient.addSubscription(PoloniexWSSSubscription.USDT_ETH, new LoggerMessageHandler());
+            wssClient.addSubscription(PoloniexWSSSubscription.TICKER, new TickerMessageHandler());
+            wssClient.run(60000);
+        }
 ```
 
-To setup your own subscription handler, just extend the PoloniexSubscription class and override the `public void call(PubSubData event)` method. 
+To setup your own subscription handler, just implement the IMessageHandler interface and do your logic within the `public void handle(String message)` method. 
 
 
 ## Donations
@@ -239,5 +240,6 @@ To setup your own subscription handler, just extend the PoloniexSubscription cla
 Your support is always welcome!
 
 BTC: 1FnpWiJ2Lo89E4x26w5jsYhmXJS9sUBR3b
+
 ETH: 0x5F99D8DD2d504369657f15101e9a0cdF0fAbb799
 

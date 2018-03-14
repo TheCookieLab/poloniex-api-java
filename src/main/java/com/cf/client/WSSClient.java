@@ -1,96 +1,117 @@
 package com.cf.client;
 
-import com.cf.data.handler.poloniex.PoloniexSubscription;
-import com.cf.data.handler.poloniex.PoloniexSubscriptionExceptionHandler;
+import com.cf.client.poloniex.wss.model.PoloniexWSSSubscription;
+import java.io.IOException;
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
+
+import com.cf.client.poloniex.PoloniexWSSClientRouter;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import rx.functions.Action1;
-import ws.wamp.jawampa.ApplicationError;
-import ws.wamp.jawampa.PubSubData;
-import ws.wamp.jawampa.WampClient;
-import ws.wamp.jawampa.WampClientBuilder;
-import ws.wamp.jawampa.transport.netty.NettyWampClientConnectorProvider;
+import java.util.stream.Collectors;
+import com.cf.client.wss.handler.IMessageHandler;
 
 /**
  *
- * @author David
+ * @author thiko
  */
-public class WSSClient implements AutoCloseable
-{
-    private final static Logger LOG = LogManager.getLogger();
-    private final WampClient wampClient;
-    private final Map<String, Action1<PubSubData>> subscriptions;
+public class WSSClient implements AutoCloseable {
 
-    public WSSClient(String uri, String realm) throws ApplicationError, Exception
-    {
-        this.subscriptions = new HashMap<>();
-        WampClientBuilder builder = new WampClientBuilder();
-        builder.withConnectorProvider(new NettyWampClientConnectorProvider())
-                .withUri(uri)
-                .withRealm(realm)
-                .withInfiniteReconnects()
-                .withReconnectInterval(5, TimeUnit.SECONDS);
+    private static final int MAX_CONTENT_BYTES = 8192;
+    private static final String SCHEME_WSS = "wss";
 
-        wampClient = builder.build();
+    private final URI uri;
+    private final SslContext sslCtx;
+    private final EventLoopGroup group;
+
+    private Map<PoloniexWSSSubscription, IMessageHandler> subscriptions;
+
+    public WSSClient(String url) throws Exception {
+        uri = new URI(url);
+
+        if (!SCHEME_WSS.equalsIgnoreCase(uri.getScheme())) {
+            throw new IllegalArgumentException("Only WSS is supported");
+        }
+
+        // FIXME: use secure trust manager
+        sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        group = new NioEventLoopGroup();
+        subscriptions = new HashMap<>();
     }
 
-    public void subscribe(PoloniexSubscription feedEventHandler)
-    {
-        this.subscriptions.put(feedEventHandler.feedName, feedEventHandler);
-    }
-
-    /***
-     * 
-     * @param runTimeInMillis The subscription time expressed in milliseconds. The minimum runtime is 1 minute. 
+    /**
+     * *
+     *
+     * @param subscription
+     * @param subscriptionMessageHandler
      */
-    public void run(long runTimeInMillis)
-    {
-        try
-        {
-            wampClient.statusChanged()
-                    .subscribe((WampClient.State newState)
-                            ->
-                    {
-                        if (newState instanceof WampClient.ConnectedState)
-                        {
-                            LOG.trace("Connected");
+    public void addSubscription(PoloniexWSSSubscription subscription, IMessageHandler subscriptionMessageHandler) {
+        this.subscriptions.put(subscription, subscriptionMessageHandler);
+    }
 
-                            for (Entry<String, Action1<PubSubData>> subscription : this.subscriptions.entrySet())
-                            {
-                                wampClient.makeSubscription(subscription.getKey()).subscribe(subscription.getValue(), new PoloniexSubscriptionExceptionHandler(subscription.getKey()));
-                            }
-                        }
-                        else if (newState instanceof WampClient.DisconnectedState)
-                        {
-                            LOG.trace("Disconnected");
-                        }
-                        else if (newState instanceof WampClient.ConnectingState)
-                        {
-                            LOG.trace("Connecting...");
-                        }
-                    });
+    /**
+     * *
+     *
+     * @param runTimeInMillis The subscription time expressed in milliseconds.
+     * The minimum runtime is 1 minute.
+     * @throws InterruptedException
+     * @throws IOException
+     * @throws java.net.URISyntaxException
+     */
+    public void run(long runTimeInMillis) throws InterruptedException, IOException, URISyntaxException {
 
-            wampClient.open();
-            long startTime = System.currentTimeMillis();
+        final PoloniexWSSClientRouter router = new PoloniexWSSClientRouter(uri, subscriptions.entrySet().stream()
+                .collect(Collectors.toMap((Map.Entry<PoloniexWSSSubscription, IMessageHandler> e) -> Double.parseDouble(e.getKey().channel), Map.Entry::getValue)));
 
-            while (wampClient.getTerminationFuture().isDone() == false && (startTime + runTimeInMillis > System.currentTimeMillis()))
-            {
-                TimeUnit.MINUTES.sleep(1);
+        Bootstrap b = new Bootstrap();
+        b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel ch) {
+                ChannelPipeline p = ch.pipeline();
+                p.addLast(sslCtx.newHandler(ch.alloc(), uri.getHost(), 443));
+                p.addLast(new HttpClientCodec(), new HttpObjectAggregator(MAX_CONTENT_BYTES),
+                        WebSocketClientCompressionHandler.INSTANCE, router);
             }
+        });
+
+        Channel ch = b.connect(uri.getHost(), 443).sync().channel();
+        router.handshakeFuture().sync();
+
+        for (Entry<PoloniexWSSSubscription, IMessageHandler> subscription : subscriptions.entrySet()) {
+            WebSocketFrame frame = new TextWebSocketFrame(subscription.getKey().toString());
+            ch.writeAndFlush(frame);
         }
-        catch (Exception ex)
-        {
-            LOG.error(("Caught exception - " + ex.getMessage()), ex);
+
+        long startTime = System.currentTimeMillis();
+
+        while (router.isRunning() == true && (startTime + runTimeInMillis > System.currentTimeMillis())) {
+            TimeUnit.MINUTES.sleep(1);
         }
+        
+        throw new InterruptedException("Runtime exceeded");
     }
 
     @Override
-    public void close() throws Exception
-    {
-        wampClient.close().toBlocking().last();
+    public void close() throws Exception {
+        group.shutdownGracefully();
     }
 }
