@@ -22,6 +22,11 @@ public class PoloniexWSSClientExample
         {
             new PoloniexWSSClientExample().run();
         }
+        catch (InterruptedException ex)
+        {
+            LOG.info(ex.getMessage());
+            System.exit(0);
+        }
         catch (Exception ex)
         {
             LOG.fatal("An exception occurred when running PoloniexWSSClientExample - {}", ex.getMessage());
@@ -35,7 +40,7 @@ public class PoloniexWSSClientExample
         {
             wssClient.addSubscription(PoloniexWSSSubscription.USDT_ETH, new LoggerMessageHandler());
             wssClient.addSubscription(PoloniexWSSSubscription.TICKER, new TickerMessageHandler());
-            wssClient.run(20000);
+            wssClient.run(10000);
         }
     }
 }
