@@ -18,9 +18,8 @@ public class TickerMessageHandler implements IMessageHandler {
 
     @Override
     public void handle(String message) {
-        LOG.trace(message);
         PoloniexWSSTicker ticker = this.mapMessageToPoloniexTicker(message);
-        LOG.trace(ticker);
+        LOG.debug(ticker);
 
     }
 

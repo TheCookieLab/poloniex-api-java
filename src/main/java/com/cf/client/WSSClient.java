@@ -106,6 +106,8 @@ public class WSSClient implements AutoCloseable {
         while (router.isRunning() == true && (startTime + runTimeInMillis > System.currentTimeMillis())) {
             TimeUnit.MINUTES.sleep(1);
         }
+        
+        throw new InterruptedException("Runtime exceeded");
     }
 
     @Override
