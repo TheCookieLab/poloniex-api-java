@@ -40,7 +40,7 @@ public class PoloniexWSSClientExample
         {
             wssClient.addSubscription(PoloniexWSSSubscription.USDT_ETH, new LoggerMessageHandler());
             wssClient.addSubscription(PoloniexWSSSubscription.TICKER, new TickerMessageHandler());
-            wssClient.run(10000);
+            wssClient.run(60000);
         }
     }
 }
