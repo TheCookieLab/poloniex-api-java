@@ -1,6 +1,6 @@
 package com.cf.client.poloniex;
 
-import com.cf.client.wss.handler.LoggerMessageHandler;
+import com.cf.client.wss.handler.LoggingMessageHandler;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,7 +47,7 @@ public class PoloniexWSSClientRouter extends SimpleChannelInboundHandler<Object>
     public PoloniexWSSClientRouter(WebSocketClientHandshaker handshaker, Map<Double, IMessageHandler> subscriptions) {
         this.handshaker = handshaker;
         this.subscriptions = subscriptions;
-        this.defaultSubscriptionMessageHandler = new LoggerMessageHandler();
+        this.defaultSubscriptionMessageHandler = new LoggingMessageHandler();
         this.gson = new Gson();
     }
 

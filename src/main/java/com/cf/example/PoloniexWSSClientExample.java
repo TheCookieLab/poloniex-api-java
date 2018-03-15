@@ -3,6 +3,7 @@ package com.cf.example;
 import com.cf.client.WSSClient;
 import com.cf.client.poloniex.wss.model.PoloniexWSSSubscription;
 import com.cf.client.wss.handler.OrderBookMessageHandler;
+import com.cf.client.wss.handler.TickerMessageHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +31,7 @@ public class PoloniexWSSClientExample {
     public void subscribe() throws Exception {
         try (WSSClient wssClient = new WSSClient(ENDPOINT_URL)) {
             wssClient.addSubscription(PoloniexWSSSubscription.USDT_ETH, new OrderBookMessageHandler());
-            //wssClient.addSubscription(PoloniexWSSSubscription.TICKER, new TickerMessageHandler());
+            wssClient.addSubscription(PoloniexWSSSubscription.TICKER, new TickerMessageHandler());
             wssClient.run(60000);
         }
 
