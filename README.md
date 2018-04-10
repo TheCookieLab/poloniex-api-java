@@ -92,6 +92,15 @@ PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret)
 List<PoloniexTradeHistory> UsdtBtcTradeHistory = service.returnTradeHistory("USDT_BTC");
 ```
 
+### Return order trades
+```java
+String apiKey = "foo";
+String apiSecret = "bar";
+PoloniexExchangeService service = new PoloniexExchangeService(apiKey, apiSecret);
+String orderNumber = "12345678";
+List<PoloniexOrderTrade> orderTrades = service.returnOrderTrades(orderNumber);
+```
+
 ### Buy
 ```java
 String apiKey = "foo";

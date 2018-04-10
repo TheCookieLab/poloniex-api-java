@@ -9,6 +9,7 @@ import com.cf.data.model.poloniex.PoloniexLendingResult;
 import com.cf.data.model.poloniex.PoloniexLoanOffer;
 import com.cf.data.model.poloniex.PoloniexOpenOrder;
 import com.cf.data.model.poloniex.PoloniexOrderResult;
+import com.cf.data.model.poloniex.PoloniexOrderTrade;
 import com.cf.data.model.poloniex.PoloniexTicker;
 import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import com.cf.data.model.poloniex.deserialize.PoloniexChartDataDeserializer;
@@ -89,7 +90,7 @@ public class PoloniexDataMapper {
     }
 
     public PoloniexActiveLoanTypes mapActiveLoans(String activeLoansResult) {
-        
+
         PoloniexActiveLoanTypes activeLoanTypes = gson.fromJson(activeLoansResult, PoloniexActiveLoanTypes.class);
 
         return activeLoanTypes;
@@ -145,6 +146,12 @@ public class PoloniexDataMapper {
         PoloniexOrderResult tradeOrderResult = gson.fromJson(orderResult, new TypeToken<PoloniexOrderResult>() {
         }.getType());
         return tradeOrderResult;
+    }
+
+    public List<PoloniexOrderTrade> mapOrderTrades(String orderTradesResult) {
+        List<PoloniexOrderTrade> orderTrades = gson.fromJson(orderTradesResult, new TypeToken<List<PoloniexOrderTrade>>() {
+        }.getType());
+        return orderTrades;
     }
 
     public List<PoloniexLendingHistory> mapLendingHistory(String lendingHistoryResults) {

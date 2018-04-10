@@ -1,6 +1,5 @@
 package com.cf.client.poloniex;
 
-
 import com.cf.TradingAPIClient;
 import com.cf.client.HTTPClient;
 import org.apache.commons.codec.binary.Hex;
@@ -22,39 +21,35 @@ import java.util.List;
  * @author David
  * @author cheolhee
  */
-public class PoloniexTradingAPIClient implements TradingAPIClient
-{
+public class PoloniexTradingAPIClient implements TradingAPIClient {
+
     private static final String TRADING_URL = "https://poloniex.com/tradingApi?";
     private final String apiKey;
     private final String apiSecret;
     private final HTTPClient client;
 
-    public PoloniexTradingAPIClient(String apiKey, String apiSecret)
-    {
+    public PoloniexTradingAPIClient(String apiKey, String apiSecret) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.client = new HTTPClient();
     }
 
     @Override
-    public String returnBalances()
-    {
+    public String returnBalances() {
         return this.returnTradingAPICommandResults("returnBalances");
     }
 
     @Override
-    public String returnFeeInfo()
-    {
+    public String returnFeeInfo() {
         return this.returnTradingAPICommandResults("returnFeeInfo");
     }
 
     @Override
-    public String returnCompleteBalances()
-    {
+    public String returnCompleteBalances() {
         return returnCompleteBalances(false);
     }
-    public String returnCompleteBalances(boolean allAccounts)
-    {
+
+    public String returnCompleteBalances(boolean allAccounts) {
         if (allAccounts) {
             returnCompleteBalances();
             List<NameValuePair> additionalPostParams = new ArrayList<>();
@@ -65,18 +60,15 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
         }
     }
 
-
     @Override
-    public String returnOpenOrders(String currencyPair)
-    {
+    public String returnOpenOrders(String currencyPair) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair));
         return returnTradingAPICommandResults("returnOpenOrders", additionalPostParams);
     }
 
     @Override
-    public String returnTradeHistory(String currencyPair)
-    {
+    public String returnTradeHistory(String currencyPair) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair == null ? "all" : currencyPair));
         additionalPostParams.add(new BasicNameValuePair("start", PoloniexExchangeService.LONG_LONG_AGO.toString()));
@@ -84,16 +76,21 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
     }
 
     @Override
-    public String cancelOrder(String orderNumber)
-    {
+    public String returnOrderTrades(String orderNumber) {
+        List<NameValuePair> additionalPostParams = new ArrayList<>();
+        additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
+        return returnTradingAPICommandResults("returnOrderTrades", additionalPostParams);
+    }
+
+    @Override
+    public String cancelOrder(String orderNumber) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
         return returnTradingAPICommandResults("cancelOrder", additionalPostParams);
     }
 
     @Override
-    public String moveOrder(String orderNumber, BigDecimal rate)
-    {
+    public String moveOrder(String orderNumber, BigDecimal rate) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
         additionalPostParams.add(new BasicNameValuePair("rate", rate.toPlainString()));
@@ -103,25 +100,22 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
     }
 
     @Override
-    public String sell(String currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
-    {
+    public String sell(String currencyPair, BigDecimal sellPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly) {
         return trade("sell", currencyPair, sellPrice, amount, fillOrKill, immediateOrCancel, postOnly);
     }
 
     @Override
-    public String buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
-    {
+    public String buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly) {
         return trade("buy", currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
     }
 
     // Lending APIs
-
     @Override
     public String returnActiveLoans() {
         return returnTradingAPICommandResults("returnActiveLoans");
     }
 
-   @Override
+    @Override
     public String returnLendingHistory(int hours, int limit) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         long currentUnixtime = System.currentTimeMillis() / 1000;
@@ -134,8 +128,7 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
     }
 
     @Override
-    public String createLoanOffer(String currency, BigDecimal amount, BigDecimal lendingRate, int duration, boolean autoRenew)
-    {
+    public String createLoanOffer(String currency, BigDecimal amount, BigDecimal lendingRate, int duration, boolean autoRenew) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
 
         additionalPostParams.add(new BasicNameValuePair("currency", currency));
@@ -149,29 +142,25 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
     }
 
     @Override
-    public String cancelLoanOffer(String orderNumber)
-    {
+    public String cancelLoanOffer(String orderNumber) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
         return returnTradingAPICommandResults("cancelLoanOffer", additionalPostParams);
     }
 
     @Override
-    public String returnOpenLoanOffers()
-    {
+    public String returnOpenLoanOffers() {
         return returnTradingAPICommandResults("returnOpenLoanOffers");
     }
 
     @Override
-    public String toggleAutoRenew(String orderNumber)
-    {
+    public String toggleAutoRenew(String orderNumber) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
         return returnTradingAPICommandResults("toggleAutoRenew", additionalPostParams);
     }
 
-    private String trade(String tradeType, String currencyPair, BigDecimal rate, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly)
-    {
+    private String trade(String tradeType, String currencyPair, BigDecimal rate, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         additionalPostParams.add(new BasicNameValuePair("currencyPair", currencyPair));
         additionalPostParams.add(new BasicNameValuePair("rate", rate.toPlainString()));
@@ -182,24 +171,19 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
         return returnTradingAPICommandResults(tradeType, additionalPostParams);
     }
 
-    private String returnTradingAPICommandResults(String commandValue, List<NameValuePair> additionalPostParams)
-    {
-        try
-        {
+    private String returnTradingAPICommandResults(String commandValue, List<NameValuePair> additionalPostParams) {
+        try {
             List<NameValuePair> postParams = new ArrayList<>();
             postParams.add(new BasicNameValuePair("command", commandValue));
             postParams.add(new BasicNameValuePair("nonce", String.valueOf(System.currentTimeMillis())));
 
-            if (additionalPostParams != null && additionalPostParams.size() > 0)
-            {
+            if (additionalPostParams != null && additionalPostParams.size() > 0) {
                 postParams.addAll(additionalPostParams);
             }
 
             StringBuilder sb = new StringBuilder();
-            for (NameValuePair postParam : postParams)
-            {
-                if (sb.length() > 0)
-                {
+            for (NameValuePair postParam : postParams) {
+                if (sb.length() > 0) {
                     sb.append("&");
                 }
                 sb.append(postParam.getName()).append("=").append(postParam.getValue());
@@ -215,17 +199,14 @@ public class PoloniexTradingAPIClient implements TradingAPIClient
             httpHeaders.add(new BasicNameValuePair("Sign", signature));
 
             return client.postHttp(TRADING_URL, postParams, httpHeaders);
-        }
-        catch (IOException | NoSuchAlgorithmException | InvalidKeyException ex)
-        {
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException ex) {
             LogManager.getLogger(PoloniexTradingAPIClient.class).warn("Call to Poloniex Trading API resulted in exception - " + ex.getMessage(), ex);
         }
 
         return null;
     }
 
-    private String returnTradingAPICommandResults(String commandValue)
-    {
+    private String returnTradingAPICommandResults(String commandValue) {
         ArrayList<NameValuePair> list = new ArrayList<NameValuePair>();
         return returnTradingAPICommandResults(commandValue, list);
     }
