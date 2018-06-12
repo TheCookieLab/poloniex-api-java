@@ -137,7 +137,7 @@ public class PoloniexExchangeService implements ExchangeService {
      * depending on parameter includeZeroBalances
      *
      * @param includeZeroBalances The includeZeroBalances
-     * @return Map<String, PoloniexCompleteBalance>
+     * @return Map of String, PoloniexCompleteBalance
      */
     @Override
     public Map<String, PoloniexCompleteBalance> returnBalance(boolean includeZeroBalances) {
@@ -292,8 +292,8 @@ public class PoloniexExchangeService implements ExchangeService {
      * Places a sell order in a given market
      *
      * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
-     * @param sellPrice
-     * @param amount
+     * @param sellPrice the sell price
+     * @param amount the amount to sell
      * @param fillOrKill Will either fill in its entirety or be completely
      * aborted
      * @param immediateOrCancel Order can be partially or completely filled, but
@@ -324,8 +324,8 @@ public class PoloniexExchangeService implements ExchangeService {
      * Places a buy order in a given market
      *
      * @param currencyPair Examples: USDT_ETH, USDT_BTC, BTC_ETH
-     * @param buyPrice
-     * @param amount
+     * @param buyPrice the buy price
+     * @param amount the amount to buy
      * @param fillOrKill Will either fill in its entirety or be completely
      * aborted
      * @param immediateOrCancel Order can be partially or completely filled, but
@@ -355,7 +355,7 @@ public class PoloniexExchangeService implements ExchangeService {
      * *
      * Cancels an order you have placed in a given market
      *
-     * @param orderNumber
+     * @param orderNumber order identifier on the exchange
      * @return true if successful, false otherwise
      */
     @Override

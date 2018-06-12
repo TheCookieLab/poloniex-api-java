@@ -63,14 +63,6 @@ public class PoloniexLendingService implements LendingService
         return lendingHistory;
     }
 
-    /**
-     * @param currency
-     * @param amount
-     * @param lendingRate
-     * @param duration
-     * @param autoRenew
-     * @return
-     */
     @Override
     public PoloniexLendingResult createLoanOffer(String currency, BigDecimal amount, BigDecimal lendingRate, int duration, boolean autoRenew)
     {
@@ -94,10 +86,6 @@ public class PoloniexLendingService implements LendingService
         return result;
     }
 
-    /**
-     * @param orderNumber
-     * @return
-     */
     @Override
     public PoloniexLendingResult cancelLoanOffer(String orderNumber)
     {
@@ -117,9 +105,6 @@ public class PoloniexLendingService implements LendingService
         return result;
     }
 
-    /**
-     * @return
-     */
     @Override
     public PoloniexActiveLoanTypes returnActiveLoans()
     {
