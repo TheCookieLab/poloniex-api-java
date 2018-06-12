@@ -58,25 +58,10 @@ public class WSSClient implements AutoCloseable {
         subscriptions = new HashMap<>();
     }
 
-    /**
-     * *
-     *
-     * @param subscription
-     * @param subscriptionMessageHandler
-     */
     public void addSubscription(PoloniexWSSSubscription subscription, IMessageHandler subscriptionMessageHandler) {
         this.subscriptions.put(subscription, subscriptionMessageHandler);
     }
 
-    /**
-     * *
-     *
-     * @param runTimeInMillis The subscription time expressed in milliseconds.
-     * The minimum runtime is 1 minute.
-     * @throws InterruptedException
-     * @throws IOException
-     * @throws java.net.URISyntaxException
-     */
     public void run(long runTimeInMillis) throws InterruptedException, IOException, URISyntaxException {
 
         final PoloniexWSSClientRouter router = new PoloniexWSSClientRouter(uri, subscriptions.entrySet().stream()

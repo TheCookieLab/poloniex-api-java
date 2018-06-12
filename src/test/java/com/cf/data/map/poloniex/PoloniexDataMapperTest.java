@@ -4,6 +4,7 @@ import com.cf.data.model.poloniex.PoloniexChartData;
 import com.cf.data.model.poloniex.PoloniexFeeInfo;
 import com.cf.data.model.poloniex.PoloniexOpenOrder;
 import com.cf.data.model.poloniex.PoloniexOrderResult;
+import com.cf.data.model.poloniex.PoloniexOrderTrade;
 import com.cf.data.model.poloniex.PoloniexTradeHistory;
 import java.math.BigDecimal;
 import java.time.ZoneOffset;
@@ -240,6 +241,22 @@ public class PoloniexDataMapperTest {
         assertEquals("55510230325", first.orderNumber);
         assertEquals("buy", first.type);
         assertEquals("exchange", first.category);
+    }
+
+    @Test
+    public void mapOrderTrades() {
+        String data = "[{\"globalTradeID\": 20825863, \"tradeID\": 147142, \"currencyPair\": \"BTC_XVC\", \"type\": \"buy\", \"rate\": \"0.00018500\", \"amount\": \"455.34206390\", \"total\": \"0.08423828\", \"fee\": \"0.00200000\", \"date\": \"2016-03-14 01:04:36\"}, {\"globalTradeID\": 20825864, \"tradeID\": 147143, \"currencyPair\": \"BTC_XVC\", \"type\": \"buy\", \"rate\": \"0.00018500\", \"amount\": \"455.34206390\", \"total\": \"0.08423828\", \"fee\": \"0.00200000\", \"date\": \"2016-03-14 01:04:36\"}]";
+        List<PoloniexOrderTrade> orderTrades = mapper.mapOrderTrades(data);
+        assertEquals(2, orderTrades.size());
+
+        PoloniexOrderTrade first = orderTrades.get(0);
+        assertEquals(20825863L, first.globalTradeID.longValue());
+        assertEquals(147142L, first.tradeID.longValue());
+        assertEquals("2016-03-14T01:04:36Z", first.date.toString());
+        assertEquals("0.00018500", first.rate.toPlainString());
+        assertEquals("0.00200000", first.fee.toPlainString());
+        assertEquals("buy", first.type);
+        assertEquals("BTC_XVC", first.currencyPair);
     }
 
 }

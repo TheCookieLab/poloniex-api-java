@@ -17,6 +17,8 @@ public interface TradingAPIClient
     public String returnOpenOrders(String currencyPair);
 
     public String returnTradeHistory(String currencyPair);
+    
+    public String returnOrderTrades(String orderNumber);
 
     public String cancelOrder(String orderNumber);
 
