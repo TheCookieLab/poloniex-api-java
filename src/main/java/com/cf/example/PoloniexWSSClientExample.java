@@ -22,10 +22,6 @@ public class PoloniexWSSClientExample {
             LOG.info(ex.getMessage());
             System.exit(0);
         } catch (Exception ex) {
-        {
-            LOG.info(ex.getMessage());
-            System.exit(0);
-        }
             LOG.fatal("An exception occurred when running PoloniexWSSClientExample - {}", ex.getMessage());
             System.exit(-1);
         }
