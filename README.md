@@ -3,7 +3,17 @@ Java API client for the Poloniex exchange with focus on simplicity and usability
 
 ### Maven configuration
 
-PoloniexClient is available on [Maven Central](http://search.maven.org/#search). You just have to add the following repository to your `pom.xml` file.
+PoloniexClient is available on [Maven Central](http://search.maven.org/#search). You just have to add the following dependency in your `pom.xml` file.
+
+```xml
+<dependency>
+  <groupId>com.github.thecookielab</groupId>
+  <artifactId>PoloniexClient</artifactId>
+  <version>1.1.1</version>
+</dependency>
+```
+
+For ***snapshots***, add the following repository to your `pom.xml` file.
 
 ```xml
 <repository>
@@ -19,6 +29,8 @@ The current snapshot version is `1.1.1-SNAPSHOT` from the [master](https://githu
   <version>1.1.1-SNAPSHOT</version>
 </dependency>
 ```
+
+### User's Guide
 
 Using this client is as simple as instantiating a new PoloniexExchangeService with your Poloniex API Key and API Secret as constructor parameters:
 
