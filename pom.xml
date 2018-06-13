@@ -47,7 +47,7 @@
 
         <!-- Only when performing a release (i.e. not for snapshots) -->
         <profile>
-            <id>sonatype-oss-release</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>
@@ -73,7 +73,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
@@ -90,8 +89,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
-                    <!-- Artifact signing -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
