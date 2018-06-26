@@ -9,5 +9,13 @@
             <goal>-P</goal>
             <goal>release</goal>
         </goals>
-    </action>
+    </action>    
+    <action>
+            <actionName>CUSTOM-Snapshot Deployment</actionName>
+            <displayName>Snapshot Deployment</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>deploy</goal>
+            </goals>
+        </action>
 </actions>
