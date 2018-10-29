@@ -4,22 +4,15 @@ import com.cf.ExchangeService;
 import com.cf.PriceDataAPIClient;
 import com.cf.TradingAPIClient;
 import com.cf.data.map.poloniex.PoloniexDataMapper;
-import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
-import com.cf.data.model.poloniex.PoloniexChartData;
-import com.cf.data.model.poloniex.PoloniexCompleteBalance;
-import com.cf.data.model.poloniex.PoloniexFeeInfo;
-import com.cf.data.model.poloniex.PoloniexOpenOrder;
-import com.cf.data.model.poloniex.PoloniexOrderResult;
-import com.cf.data.model.poloniex.PoloniexOrderTrade;
-import com.cf.data.model.poloniex.PoloniexTicker;
-import com.cf.data.model.poloniex.PoloniexTradeHistory;
+import com.cf.data.model.poloniex.*;
+import org.apache.http.HttpHost;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -38,6 +31,12 @@ public class PoloniexExchangeService implements ExchangeService {
         this.tradingClient = new PoloniexTradingAPIClient(apiKey, apiSecret);
         this.mapper = new PoloniexDataMapper();
     }
+
+	public PoloniexExchangeService(String apiKey, String apiSecret, HttpHost httpHost) {
+		this.publicClient = new PoloniexPublicAPIClient(httpHost);
+		this.tradingClient = new PoloniexTradingAPIClient(apiKey, apiSecret, httpHost);
+		this.mapper = new PoloniexDataMapper();
+	}
 
     public PoloniexExchangeService(PriceDataAPIClient publicClient, TradingAPIClient tradingClient, PoloniexDataMapper mapper) {
         this.publicClient = publicClient;

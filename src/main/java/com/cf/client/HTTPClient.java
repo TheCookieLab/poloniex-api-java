@@ -1,11 +1,6 @@
 package com.cf.client;
 
-import java.io.IOException;
-import java.util.List;
-import org.apache.http.Consts;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -14,12 +9,27 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  *
  * @author David
  */
 public class HTTPClient
 {
+
+    private final HttpHost proxy;
+
+    public HTTPClient() {
+        this.proxy = null;
+    }
+
+    public HTTPClient(HttpHost proxy) {
+        this.proxy = proxy;
+    }
+
+
     public String postHttp(String url, List<NameValuePair> params, List<NameValuePair> headers) throws IOException
     {
         HttpPost post = new HttpPost(url);
@@ -34,7 +44,7 @@ public class HTTPClient
             }
         }
 
-        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = HttpClientBuilder.create().setProxy(proxy).build();
         HttpResponse response = httpClient.execute(post);
 
         HttpEntity entity = response.getEntity();
@@ -58,7 +68,7 @@ public class HTTPClient
             }
         }
 
-        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = HttpClientBuilder.create().setProxy(proxy).build();
         HttpResponse response = httpClient.execute(request);
 
         HttpEntity entity = response.getEntity();

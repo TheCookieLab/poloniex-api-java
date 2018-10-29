@@ -3,6 +3,7 @@ package com.cf.client.poloniex;
 import com.cf.TradingAPIClient;
 import com.cf.client.HTTPClient;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +33,12 @@ public class PoloniexTradingAPIClient implements TradingAPIClient {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.client = new HTTPClient();
+    }
+
+    public PoloniexTradingAPIClient(String apiKey, String apiSecret, HttpHost httpHost) {
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
+        this.client = new HTTPClient(httpHost);
     }
 
     @Override

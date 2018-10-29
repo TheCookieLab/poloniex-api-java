@@ -7,6 +7,7 @@ import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
 import com.cf.data.model.poloniex.PoloniexLendingHistory;
 import com.cf.data.model.poloniex.PoloniexLendingResult;
 import com.cf.data.model.poloniex.PoloniexLoanOffer;
+import org.apache.http.HttpHost;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +29,11 @@ public class PoloniexLendingService implements LendingService
     public PoloniexLendingService(String apiKey, String apiSecret)
     {
         this.tradingClient = new PoloniexTradingAPIClient(apiKey, apiSecret);
+        this.mapper = new PoloniexDataMapper();
+    }
+
+    public PoloniexLendingService(String apiKey, String apiSecret, HttpHost proxy) {
+        this.tradingClient = new PoloniexTradingAPIClient(apiKey, apiSecret, proxy);
         this.mapper = new PoloniexDataMapper();
     }
 
