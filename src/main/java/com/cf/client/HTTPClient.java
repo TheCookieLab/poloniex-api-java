@@ -21,11 +21,13 @@ public class HTTPClient
 
     private final HttpHost proxy;
 
-    public HTTPClient() {
+    public HTTPClient()
+    {
         this.proxy = null;
     }
 
-    public HTTPClient(HttpHost proxy) {
+    public HTTPClient(HttpHost proxy)
+    {
         this.proxy = proxy;
     }
 

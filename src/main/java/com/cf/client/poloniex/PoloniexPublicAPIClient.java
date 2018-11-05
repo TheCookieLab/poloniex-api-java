@@ -17,11 +17,13 @@ public class PoloniexPublicAPIClient implements PriceDataAPIClient
     private static final String PUBLIC_URL = "https://poloniex.com/public?";
     private final HTTPClient client;
 
-    public PoloniexPublicAPIClient() {
+    public PoloniexPublicAPIClient()
+    {
         this.client = new HTTPClient();
     }
 
-    public PoloniexPublicAPIClient(HttpHost proxy) {
+    public PoloniexPublicAPIClient(HttpHost proxy)
+    {
         this.client = new HTTPClient(proxy);
     }
 

@@ -32,7 +32,8 @@ public class PoloniexLendingService implements LendingService
         this.mapper = new PoloniexDataMapper();
     }
 
-	public PoloniexLendingService(String apiKey, String apiSecret, HttpHost proxy) {
+	public PoloniexLendingService(String apiKey, String apiSecret, HttpHost proxy)
+	{
         this.tradingClient = new PoloniexTradingAPIClient(apiKey, apiSecret, proxy);
         this.mapper = new PoloniexDataMapper();
     }
