@@ -1,27 +1,12 @@
 package com.cf.data.map.poloniex;
 
-import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
-import com.cf.data.model.poloniex.PoloniexChartData;
-import com.cf.data.model.poloniex.PoloniexCompleteBalance;
-import com.cf.data.model.poloniex.PoloniexFeeInfo;
-import com.cf.data.model.poloniex.PoloniexLendingHistory;
-import com.cf.data.model.poloniex.PoloniexLendingResult;
-import com.cf.data.model.poloniex.PoloniexLoanOffer;
-import com.cf.data.model.poloniex.PoloniexOpenOrder;
-import com.cf.data.model.poloniex.PoloniexOrderResult;
-import com.cf.data.model.poloniex.PoloniexOrderTrade;
-import com.cf.data.model.poloniex.PoloniexTicker;
-import com.cf.data.model.poloniex.PoloniexTradeHistory;
+import com.cf.data.model.poloniex.*;
 import com.cf.data.model.poloniex.deserialize.PoloniexChartDataDeserializer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.ZoneOffset;
@@ -30,9 +15,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -174,5 +156,25 @@ public class PoloniexDataMapper {
         }.getType());
         return plr;
     }
+
+	public PoloniexOrderStatus mapOrderStatus(String result) {
+		return gson.fromJson(result, new TypeToken<PoloniexOrderStatus>() {
+		}.getType());
+	}
+
+	public PoloniexOrderStatusCheck mapOrderStatusCheck(String result) {
+		return gson.fromJson(result, new TypeToken<PoloniexOrderStatusCheck>() {
+		}.getType());
+	}
+
+	public PoloniexOrderStatusError mapOrderStatusError(String result) {
+		return gson.fromJson(result, new TypeToken<PoloniexOrderStatusError>() {
+		}.getType());
+	}
+
+	public PoloniexWithdrawResult mapWithdrawResult(String result) {
+		return gson.fromJson(result, new TypeToken<PoloniexWithdrawResult>() {
+		}.getType());
+	}
 
 }

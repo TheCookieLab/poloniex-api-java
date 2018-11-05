@@ -90,6 +90,13 @@ public class PoloniexTradingAPIClient implements TradingAPIClient {
     }
 
     @Override
+    public String returnOrderStatus(String orderNumber) {
+        List<NameValuePair> additionalPostParams = new ArrayList<>();
+        additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
+        return returnTradingAPICommandResults("returnOrderStatus", additionalPostParams);
+    }
+
+    @Override
     public String cancelOrder(String orderNumber) {
         List<NameValuePair> additionalPostParams = new ArrayList<>();
         additionalPostParams.add(new BasicNameValuePair("orderNumber", orderNumber));
@@ -114,6 +121,18 @@ public class PoloniexTradingAPIClient implements TradingAPIClient {
     @Override
     public String buy(String currencyPair, BigDecimal buyPrice, BigDecimal amount, boolean fillOrKill, boolean immediateOrCancel, boolean postOnly) {
         return trade("buy", currencyPair, buyPrice, amount, fillOrKill, immediateOrCancel, postOnly);
+    }
+
+    @Override
+    public String withdraw(String currency, BigDecimal amount, String address, String paymentId) {
+        List<NameValuePair> additionalPostParams = new ArrayList<>();
+        additionalPostParams.add(new BasicNameValuePair("currency", currency));
+        additionalPostParams.add(new BasicNameValuePair("amount", amount.toPlainString()));
+        additionalPostParams.add(new BasicNameValuePair("address", address));
+        if (paymentId != null) {
+            additionalPostParams.add(new BasicNameValuePair("paymentId", paymentId));
+        }
+        return returnTradingAPICommandResults("withdraw", additionalPostParams);
     }
 
     // Lending APIs

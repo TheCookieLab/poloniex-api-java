@@ -225,6 +225,59 @@ public class PoloniexExchangeService implements ExchangeService {
     }
 
     /**
+     * Returns order status  for a given orderNumber
+     *
+     * @param orderNumber
+     * @return PoloniexOrderStatus
+     */
+    @Override
+    public PoloniexOrderStatus returnOrderStatus(String orderNumber) {
+        long start = System.currentTimeMillis();
+        PoloniexOrderStatus orderStatus = null;
+        PoloniexOrderStatusCheck orderStatusCheck;
+        try {
+            String orderStatusStr = tradingClient.returnOrderStatus(orderNumber);
+            orderStatusCheck = mapper.mapOrderStatusCheck(orderStatusStr);
+            if (orderStatusCheck.success == 1) {
+                orderStatus = mapper.mapOrderStatus(orderStatusStr);
+            } else {
+                PoloniexOrderStatusError error = mapper.mapOrderStatusError(orderStatusStr);
+                orderStatus = new PoloniexOrderStatus(0, error.result.get("error"), null);
+            }
+            LOG.trace("Retrieved and mapped {} {} order status in {} ms", orderStatusStr, orderNumber, System.currentTimeMillis() - start);
+            return orderStatus;
+        } catch (Exception ex) {
+            LOG.error("Error retrieving order status for {} - {}", orderNumber, ex.getMessage());
+        }
+
+        return orderStatus;
+    }
+
+    /**
+     * Places a withdraw order
+     *
+     * @param currency  Examples: USDT ETH
+     * @param amount    the amount to withdraw
+     * @param address   the address of currency
+     * @param paymentId For XMR withdrawals, you may optionally specify "paymentId".
+     * @return PoloniexWithdrawResult
+     */
+    @Override
+    public PoloniexWithdrawResult withdraw(String currency, BigDecimal amount, String address, String paymentId) {
+        long start = System.currentTimeMillis();
+        PoloniexWithdrawResult withdrawResult = null;
+        try {
+            String withdrawResultStr = tradingClient.withdraw(currency, amount, address, paymentId);
+            withdrawResult = mapper.mapWithdrawResult(withdrawResultStr);
+            LOG.trace("Retrieved and mapped {} {} withdraw in {} ms", withdrawResultStr, currency, System.currentTimeMillis() - start);
+            return withdrawResult;
+        } catch (Exception ex) {
+            LOG.error("Error retrieving withdraw for {} - {}", currency, ex.getMessage());
+        }
+        return withdrawResult;
+    }
+
+    /**
      * *
      * Returns your open orders for a given currency pair
      *
