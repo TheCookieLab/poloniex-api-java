@@ -4,22 +4,15 @@ import com.cf.ExchangeService;
 import com.cf.PriceDataAPIClient;
 import com.cf.TradingAPIClient;
 import com.cf.data.map.poloniex.PoloniexDataMapper;
-import com.cf.data.model.poloniex.PoloniexActiveLoanTypes;
-import com.cf.data.model.poloniex.PoloniexChartData;
-import com.cf.data.model.poloniex.PoloniexCompleteBalance;
-import com.cf.data.model.poloniex.PoloniexFeeInfo;
-import com.cf.data.model.poloniex.PoloniexOpenOrder;
-import com.cf.data.model.poloniex.PoloniexOrderResult;
-import com.cf.data.model.poloniex.PoloniexOrderTrade;
-import com.cf.data.model.poloniex.PoloniexTicker;
-import com.cf.data.model.poloniex.PoloniexTradeHistory;
+import com.cf.data.model.poloniex.*;
+import org.apache.http.HttpHost;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -38,6 +31,12 @@ public class PoloniexExchangeService implements ExchangeService {
         this.tradingClient = new PoloniexTradingAPIClient(apiKey, apiSecret);
         this.mapper = new PoloniexDataMapper();
     }
+
+	public PoloniexExchangeService(String apiKey, String apiSecret, HttpHost httpHost) {
+		this.publicClient = new PoloniexPublicAPIClient(httpHost);
+		this.tradingClient = new PoloniexTradingAPIClient(apiKey, apiSecret, httpHost);
+		this.mapper = new PoloniexDataMapper();
+	}
 
     public PoloniexExchangeService(PriceDataAPIClient publicClient, TradingAPIClient tradingClient, PoloniexDataMapper mapper) {
         this.publicClient = publicClient;
@@ -223,6 +222,59 @@ public class PoloniexExchangeService implements ExchangeService {
         }
 
         return activeLoanTypes;
+    }
+
+    /**
+     * Returns order status  for a given orderNumber
+     *
+     * @param orderNumber
+     * @return PoloniexOrderStatus
+     */
+    @Override
+    public PoloniexOrderStatus returnOrderStatus(String orderNumber) {
+        long start = System.currentTimeMillis();
+        PoloniexOrderStatus orderStatus = null;
+        PoloniexOrderStatusCheck orderStatusCheck;
+        try {
+            String orderStatusStr = tradingClient.returnOrderStatus(orderNumber);
+            orderStatusCheck = mapper.mapOrderStatusCheck(orderStatusStr);
+            if (orderStatusCheck.success == 1) {
+                orderStatus = mapper.mapOrderStatus(orderStatusStr);
+            } else {
+                PoloniexOrderStatusError error = mapper.mapOrderStatusError(orderStatusStr);
+                orderStatus = new PoloniexOrderStatus(0, error.result.get("error"), null);
+            }
+            LOG.trace("Retrieved and mapped {} {} order status in {} ms", orderStatusStr, orderNumber, System.currentTimeMillis() - start);
+            return orderStatus;
+        } catch (Exception ex) {
+            LOG.error("Error retrieving order status for {} - {}", orderNumber, ex.getMessage());
+        }
+
+        return orderStatus;
+    }
+
+    /**
+     * Places a withdraw order
+     *
+     * @param currency  Examples: USDT ETH
+     * @param amount    the amount to withdraw
+     * @param address   the address of currency
+     * @param paymentId For XMR withdrawals, you may optionally specify "paymentId".
+     * @return PoloniexWithdrawResult
+     */
+    @Override
+    public PoloniexWithdrawResult withdraw(String currency, BigDecimal amount, String address, String paymentId) {
+        long start = System.currentTimeMillis();
+        PoloniexWithdrawResult withdrawResult = null;
+        try {
+            String withdrawResultStr = tradingClient.withdraw(currency, amount, address, paymentId);
+            withdrawResult = mapper.mapWithdrawResult(withdrawResultStr);
+            LOG.trace("Retrieved and mapped {} {} withdraw in {} ms", withdrawResultStr, currency, System.currentTimeMillis() - start);
+            return withdrawResult;
+        } catch (Exception ex) {
+            LOG.error("Error retrieving withdraw for {} - {}", currency, ex.getMessage());
+        }
+        return withdrawResult;
     }
 
     /**

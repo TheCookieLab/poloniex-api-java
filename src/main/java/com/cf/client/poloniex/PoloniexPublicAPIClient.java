@@ -2,8 +2,10 @@ package com.cf.client.poloniex;
 
 import com.cf.PriceDataAPIClient;
 import com.cf.client.HTTPClient;
-import java.io.IOException;
+import org.apache.http.HttpHost;
 import org.apache.logging.log4j.LogManager;
+
+import java.io.IOException;
 
 /**
  *
@@ -18,6 +20,11 @@ public class PoloniexPublicAPIClient implements PriceDataAPIClient
     public PoloniexPublicAPIClient()
     {
         this.client = new HTTPClient();
+    }
+
+    public PoloniexPublicAPIClient(HttpHost proxy)
+    {
+        this.client = new HTTPClient(proxy);
     }
 
     public PoloniexPublicAPIClient(HTTPClient client)
