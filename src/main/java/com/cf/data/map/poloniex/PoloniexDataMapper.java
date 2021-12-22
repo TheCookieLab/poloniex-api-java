@@ -25,7 +25,7 @@ public class PoloniexDataMapper {
     private final Gson gson;
 
     private final static Logger LOGGER = LogManager.getLogger();
-    private final static DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
+    private final static DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss[.n]").withZone(ZoneOffset.UTC);
     private final static String EMPTY_RESULTS = "[]";
     private final static String INVALID_CHART_DATA_DATE_RANGE_RESULT = "[{\"date\":0,\"high\":0,\"low\":0,\"open\":0,\"close\":0,\"volume\":0,\"quoteVolume\":0,\"weightedAverage\":0}]";
     private final static String INVALID_CHART_DATA_CURRENCY_PAIR_RESULT = "{\"error\":\"Invalid currency pair.\"}";
