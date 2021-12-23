@@ -142,12 +142,12 @@ public class PoloniexDataMapperTest {
 
     @Test
     public void mapBuyTradeOrder() {
-        String data = "{\"orderNumber\":31226040,\"resultingTrades\":[{\"amount\":\"338.8732\",\"date\":\"2014-10-18 23:03:21\",\"rate\":\"0.00000173\",\"total\":\"0.00058625\",\"tradeID\":\"16164\",\"type\":\"buy\"}]}";
+        String data = "{\"orderNumber\":31226040,\"resultingTrades\":[{\"amount\":\"338.8732\",\"date\":\"2021-10-23 19:32:05.000000\",\"rate\":\"0.00000173\",\"total\":\"0.00058625\",\"tradeID\":\"16164\",\"type\":\"buy\"}]}";
         PoloniexOrderResult orderResult = mapper.mapTradeOrder(data);
         assertEquals(31226040L, orderResult.orderNumber.longValue());
         assertEquals(1, orderResult.resultingTrades.size());
         assertEquals(BigDecimal.valueOf(338.8732), orderResult.resultingTrades.get(0).amount);
-        assertEquals("2014-10-18T23:03:21Z", orderResult.resultingTrades.get(0).date.toString());
+        assertEquals("2021-10-23T19:32:05Z", orderResult.resultingTrades.get(0).date.toString());
         assertEquals(BigDecimal.valueOf(0.00000173), orderResult.resultingTrades.get(0).rate);
         assertEquals(BigDecimal.valueOf(0.00058625), orderResult.resultingTrades.get(0).total);
         assertEquals("16164", orderResult.resultingTrades.get(0).tradeID);

@@ -18,15 +18,15 @@ For ***snapshots***, add the following repository to your `pom.xml` file.
 ```xml
 <repository>
     <id>sonatype snapshots</id>
-    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 </repository>
 ```
-The current snapshot version is `1.1.2-SNAPSHOT` from the [develop](https://github.com/TheCookieLab/poloniex-api-java/tree/develop) branch.
+The current snapshot version is `1.1.3-SNAPSHOT` from the [develop](https://github.com/TheCookieLab/poloniex-api-java/tree/develop) branch.
 ```xml
 <dependency>
   <groupId>com.github.thecookielab</groupId>
   <artifactId>PoloniexClient</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <version>1.1.3-SNAPSHOT</version>
 </dependency>
 ```
 
